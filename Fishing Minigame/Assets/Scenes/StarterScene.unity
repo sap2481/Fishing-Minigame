@@ -130,6 +130,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: circlePrefab
+      value: 
+      objectReference: {fileID: 9218497257287703978, guid: 32dcccbbe12394f478399ae555da93a0, type: 3}
     - target: {fileID: 4597014426364639718, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
