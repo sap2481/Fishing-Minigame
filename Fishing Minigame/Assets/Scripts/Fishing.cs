@@ -86,6 +86,7 @@ public class Fishing : MonoBehaviour
         {
             if (!lineCast && bobber == null) //If the line was just cast...
             {
+                lineCast = true;
                 bobber = Instantiate(crosshairPrefab);
                 bobber.transform.position = mousePosition;
                 bobber.GetComponent<SpriteRenderer>().color = Color.red;
@@ -95,7 +96,9 @@ public class Fishing : MonoBehaviour
             else if (lineCast && bobber != null && notification != null) //If the line is cast, and the player can catch a fish...
             {
                 fishOnTheLine = true;
-                ringTotal = Random.Range(1, 3);
+                //ringTotal = Random.Range(1, 3);
+                ringTotal = 3; //Works when 2 but breaks when 3. Idk why yet but I'll figure it out.
+                //Debug.Log("Ring Total: " + ringTotal);
                 ringCount = 1;
 
                 //fishCaught++; //Catch a fish, & destroy relevant fish-catching prefabs
@@ -104,12 +107,11 @@ public class Fishing : MonoBehaviour
                 circles.Add(Instantiate(circlePrefab));
                 targetCircle = circles[0];
                 circleScale = Random.Range(1.0f, 1.5f);
-                circles[0].transform.position = bobber.transform.position;
+                targetCircle.transform.position = bobber.transform.position;
+                targetCircle.transform.localScale = new Vector3(circleScale, circleScale);
 
                 Color tempColor = new Color(230, 0, 255);
-                circles[0].GetComponent<SpriteRenderer>().color = tempColor;
-
-                circles[0].transform.localScale = new Vector3(circleScale, circleScale);
+                targetCircle.GetComponent<SpriteRenderer>().color = tempColor;
 
                 //Destroy notification & bobber
                 Destroy(notification.gameObject);
@@ -120,56 +122,74 @@ public class Fishing : MonoBehaviour
                 //Instantiate First Scaling Circle
                 circles.Add(Instantiate(circlePrefab));
                 scalingCircle = circles[1];
-                scaleSpeed = Random.Range(0.1f, 0.5f);
-                circles[1].transform.position = circles[0].transform.position;
-                circles[1].transform.localScale = new Vector3(0.01f, 0.01f);
+                scaleSpeed = Random.Range(0.5f, 1f);
+                scalingCircle.transform.position = targetCircle.transform.position;
+                scalingCircle.transform.localScale = new Vector3(0.01f, 0.01f);
 
             }
-            else if (fishOnTheLine && ringCount <= ringTotal) //If the player is in the process of catching the fish, and has not completed all rings
+            else if (fishOnTheLine && ringCount <= ringTotal) //If the player is in the process of catching the fish...
             {
                 ringCount++;
 
-                //Measure difference in scales between targetCircle and scalingCircle
-
-
-                targetCircle.SetActive(false); //Turn target circle invisible before initializing a new target circle
-                GameObject lastTargetCircle = targetCircle;
-                GameObject lastScalingCircle = scalingCircle;
-
-                //Instantiate Next Target Circle
-                circles.Add(Instantiate(circlePrefab));
-                targetCircle = circles[0 + (ringCount * 2)]; //PROBLEM: Got an Index Out Of Bounds exception here. Will need to re-math this part.
-                circleScale = Random.Range(1.0f, 1.5f);
-                targetCircle.transform.localScale = new Vector3(lastTargetCircle.transform.localScale.x + circleScale, lastTargetCircle.transform.localScale.y + circleScale);
-                targetCircle.transform.position = lastTargetCircle.transform.position;
-                targetCircle.GetComponent<SpriteRenderer>().color = new Color(230, 0, 255);
-                targetCircle.layer = lastTargetCircle.layer - 1;
-
-                //Instantiate Next Scaling Circle
-                circles.Add(Instantiate(circlePrefab));
-                scalingCircle = circles[1 + (ringCount * 2)];
-                scaleSpeed = Random.Range(0.1f, 0.5f);
-                scalingCircle.transform.position = lastScalingCircle.transform.position;
-                scalingCircle.transform.localScale = lastScalingCircle.transform.localScale;
-                Color tempcolor = scalingCircle.GetComponent<SpriteRenderer>().color;
-                tempcolor.g += 100;
-                scalingCircle.GetComponent<SpriteRenderer>().color = tempcolor;
-                scalingCircle.layer = lastScalingCircle.layer - 1;
-            }
-            else if (fishOnTheLine && ringCount > ringTotal) //If the player has completed their progression through the rings...
-            {
-                foreach(GameObject circle in circles) //Destroy all circles & clear them from the list
+                if (ringCount > ringTotal) //If the player has completed their progression through the rings...
                 {
-                    Destroy(circle.gameObject);
+                    foreach (GameObject circle in circles) //Destroy all circles & clear them from the list
+                    {
+                        Destroy(circle.gameObject);
+                    }
+                    circles.Clear();
+                    lineCast = false;
+                    
+                    //Determine a catch
+                    if (scaleDifference < 0.5f) //0.5f is a temp value, and will be replaced by a random value determined by the fish's difficulty
+                    {
+                        fishCaught++;
+                        Debug.Log("Fish Caught! Scale Difference: " + scaleDifference);
+                    }
+                    else
+                    {
+                        Debug.Log("Failed; the fish got away. Scale Difference: " + scaleDifference);
+                    }
                 }
-                circles.Clear();
+                else //If the player still has rings to progress to...
+                {
+                    //Measure difference in scales between targetCircle and scalingCircle
+                    float thisDifference = (targetCircle.transform.localScale.x - scalingCircle.transform.localScale.x);
+                    if (thisDifference < 0) { thisDifference *= -1; }
+                    scaleDifference += thisDifference;
+
+                    targetCircle.SetActive(false); //Turn target circle invisible before initializing a new target circle
+                    GameObject lastTargetCircle = targetCircle;
+                    GameObject lastScalingCircle = scalingCircle;
+
+                    //Instantiate Next Target Circle
+                    circles.Add(Instantiate(circlePrefab));
+                    if (ringCount % 2 == 0) { targetCircle = circles[ringCount]; }
+                    else { targetCircle = circles[ringCount + 1]; }
+                    circleScale = Random.Range(1.0f, 1.5f);
+                    targetCircle.transform.localScale = new Vector3(lastTargetCircle.transform.localScale.x + circleScale, lastTargetCircle.transform.localScale.y + circleScale);
+                    targetCircle.transform.position = lastTargetCircle.transform.position;
+                    targetCircle.GetComponent<SpriteRenderer>().color = new Color(230, 0, 255);
+
+                    //Instantiate Next Scaling Circle
+                    circles.Add(Instantiate(circlePrefab));
+                    if (ringCount % 2 == 0) { scalingCircle = circles[ringCount + 1]; }
+                    else { scalingCircle = circles[ringCount]; }
+                    scaleSpeed = Random.Range(0.5f, 1f);
+                    scalingCircle.transform.position = lastScalingCircle.transform.position;
+                    scalingCircle.transform.localScale = lastScalingCircle.transform.localScale;
+                    Color tempcolor = scalingCircle.GetComponent<SpriteRenderer>().color;
+                    tempcolor.g += 100;
+                    scalingCircle.GetComponent<SpriteRenderer>().color = tempcolor;
+                }              
             }
-            else if (lineCast && bobber != null) //If the line was just reeled in without a catch...
+            else if (lineCast && bobber != null && !fishOnTheLine) //If the line was just reeled in without a catch...
             {
                 Destroy(bobber.gameObject);
                 bobber = null;
+                lineCast = false;
             }
-            lineCast = !lineCast;
+            //lineCast = !lineCast;
         }
 
         if (scalingCircle != null) //If a scalingCircle exists, scale it up
