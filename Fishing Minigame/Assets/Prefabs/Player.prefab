@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 0e157a45d4ea087499c85b0428d93859, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -117,6 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crosshairPrefab: {fileID: 371909100517979966, guid: 9d3e07cb77a8a0940b5a4e489a2b79f8, type: 3}
   notificationPrefab: {fileID: 3634794862189123736, guid: be3345a0323a65f4b913a5f872d0dd2e, type: 3}
+  circlePrefab: {fileID: 0}
 --- !u!114 &-379841758902571932
 MonoBehaviour:
   m_ObjectHideFlags: 0
