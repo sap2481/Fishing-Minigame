@@ -137,6 +137,7 @@ public class Fishing : MonoBehaviour
                     }
                     circles.Clear();
                     lineCast = false;
+                    fishOnTheLine = false;
                     
                     //Determine a catch
                     if (scaleDifference < 0.5f) //0.5f is a temp value, and will be replaced by a random value determined by the fish's difficulty
