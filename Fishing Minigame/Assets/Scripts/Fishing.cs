@@ -167,13 +167,15 @@ public class Fishing : MonoBehaviour
                         fishOnTheLine = false;
 
                         //Determine a catch
-                        if (scaleDifference < 0.5f) //0.5f is a temp value, and will be replaced by a random value determined by the fish's difficulty
+                        if (scaleDifference < 0.75f) //0.5f is a temp value, and will be replaced by a random value determined by the fish's difficulty
                         {
                             fishCaught++;
+                            Debug.Log("Scale Difference: " + scaleDifference);
                         }
                         else
                         {
                             fishFail = true;
+                            Debug.Log("Scale Difference: " + scaleDifference);
                         }
                     }
                     else //If the player still has rings to progress to...
