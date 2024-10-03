@@ -43,9 +43,11 @@ public class Fishing : MonoBehaviour
     bool fishOnTheLine; //Is a fish on the line?
     float range; //The range at which a player can cast their line away from their ship
     float distance; //How far is the player attempting to cast?
+    bool fishFail; //Declare if the player failed to catch a fish (used for the CatchTracker)
 
     //==== PROPERTIES ====
     public int FishCaught { get { return fishCaught; } }
+    public bool FishFail { get { return fishFail; } set { fishFail = value; } }
 
     //==== START ====
     void Start()
@@ -76,6 +78,7 @@ public class Fishing : MonoBehaviour
         circles = new List<GameObject>();
         range = 4;
         distance = 0;
+        fishFail = false;
     }
 
     //==== UPDATE ====
@@ -167,11 +170,10 @@ public class Fishing : MonoBehaviour
                         if (scaleDifference < 0.5f) //0.5f is a temp value, and will be replaced by a random value determined by the fish's difficulty
                         {
                             fishCaught++;
-                            Debug.Log("Fish Caught! Scale Difference: " + scaleDifference);
                         }
                         else
                         {
-                            Debug.Log("Failed; the fish got away. Scale Difference: " + scaleDifference);
+                            fishFail = true;
                         }
                     }
                     else //If the player still has rings to progress to...

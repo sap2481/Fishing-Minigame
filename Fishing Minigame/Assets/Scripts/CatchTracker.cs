@@ -27,15 +27,21 @@ public class CatchTracker : MonoBehaviour
     {
         catchTracker_Text.text = "Fish Caught: " + fishingManager.FishCaught;
 
-        if (prevFishCaught != fishingManager.FishCaught) //Turn panel green when a player catches a fish
+        if (prevFishCaught != fishingManager.FishCaught) //If the player just caught a fish, turn the panel green.
         {
             catchTracker_Panel.GetComponent<Image>().color = Color.green;
         }
 
-        //Restore Panel Color
-        if (catchTracker_Panel.GetComponent<Image>().color.g > 0)
+        if (fishingManager.FishFail) //If the player just failed to catch a fish, turn the panel red
         {
-            catchTracker_Panel.GetComponent<Image>().color = new Color(0f, catchTracker_Panel.GetComponent<Image>().color.g - 0.001f, 0f);
+            catchTracker_Panel.GetComponent<Image>().color = Color.red;
+            fishingManager.FishFail = false;
+        }
+
+        //Restore Panel Color
+        if (catchTracker_Panel.GetComponent<Image>().color.g > 0 || catchTracker_Panel.GetComponent<Image>().color.r > 0)
+        {
+            catchTracker_Panel.GetComponent<Image>().color = new Color(catchTracker_Panel.GetComponent<Image>().color.r - 0.01f, catchTracker_Panel.GetComponent<Image>().color.g - 0.01f, 0f);
         }
 
         prevFishCaught = fishingManager.FishCaught;

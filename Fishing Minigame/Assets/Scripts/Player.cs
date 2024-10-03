@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] float downSpeed = 0f;
 
     private float maxSpeed = 5f;
-    private float accel = 0.01f;
+    private float accel = 0.05f;
 
     //Camera
     Camera cam;
