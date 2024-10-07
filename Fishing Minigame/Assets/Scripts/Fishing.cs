@@ -21,17 +21,24 @@ public class Fishing : MonoBehaviour
     GameObject bobber; //Crosshair but a different color
     [SerializeField] GameObject notificationPrefab;
     GameObject notification;
+
+    //First-Pass Mechanic Related Fields
+    float circleScale; //The scale of the target circle
+    float scaleSpeed; //The speed at which the scaling circle scales upwards
+    int ringTotal; //How many total rings this particular cast requires the player to go through - REQUIRED FOR PRIMARY MECHANIC    
+    int ringCount; //How many rings has the player currently gone through? - REQUIRED FOR PRIMARY MECHANIC
+    float scaleDifference; //The total difference in scales between target circles and their respective scaling circles.
     [SerializeField] GameObject circlePrefab;
     GameObject targetCircle;
     GameObject scalingCircle;
     List<GameObject> circles;
 
-    //Mechanic-Related Fields
-    float circleScale; //The scale of the target circle
-    float scaleSpeed; //The speed at which the scaling circle scales upwards
-    int ringTotal; //How many total rings this particular cast requires the player to go through
-    int ringCount; //How many rings has the player currently gone through?
-    float scaleDifference; //The total difference in scales between target circles and their respective scaling circles.
+    //Primary Mechanic Related Fields
+    [SerializeField] GameObject conePrefab;
+    List<GameObject> targetCones;
+    List<GameObject> movingCones;
+    float rotationSpeed; //How fast the current moving cone is rotating
+    float rotationDifference; //Difference in rotation between target cone and current moving cone
 
     //Player
     GameObject player;
@@ -65,7 +72,11 @@ public class Fishing : MonoBehaviour
         //Find Player
         player = GameObject.FindGameObjectWithTag("Player");
 
-        //Set Other Values
+        //Instantiate Lists
+        targetCones = new List<GameObject>();
+        movingCones = new List<GameObject>();   
+
+        //Initialize Other Values
         lineCast = false;
         fishCaught = 0;
         numberOfCasts = 0;
@@ -79,6 +90,8 @@ public class Fishing : MonoBehaviour
         range = 4;
         distance = 0;
         fishFail = false;
+        rotationSpeed = 0;
+        rotationDifference = 0;
     }
 
     //==== UPDATE ====
@@ -106,6 +119,154 @@ public class Fishing : MonoBehaviour
         else { distance = Vector3.Distance(mousePosition, player.transform.position); } //Crosshair Distance is Line is Not Cast
 
         if (distance < range) //If the bobber is within range of the player, meaning the player can cast...
+        {
+            crosshair.GetComponent<SpriteRenderer>().color = Color.green;
+
+            if (!mouseLeftThisFrame && mouseLeftLastFrame) //If the mouse was just clicked...
+            {
+                //Is the line cast, is there a bobber, is there a notification, and is there a fish on the line?
+                switch (lineCast, bobber == null, notification == null, fishOnTheLine)
+                {
+                    //Line has not been cast, bobber & notification are null, and there is not a fish on the line
+                    //(The player is casting their line)
+                    case (false, true, true, false):
+                        
+                        lineCast = true;
+                        bobber = Instantiate(crosshairPrefab);
+                        bobber.transform.position = mousePosition;
+                        bobber.GetComponent<SpriteRenderer>().color = Color.yellow;
+                        numberOfCasts++;
+                        StartCoroutine(WaitForFish(Random.Range(3.0f, 5.0f), numberOfCasts));
+                        
+                        break;
+                    
+                    //Line has been cast, there is a bobber and a notification, but a fish is not yet on the line
+                    //(The player is beginning to catch a fish)
+                    case (true, false, false, false):
+                        
+                        fishOnTheLine = true;
+                        ringTotal = 1; //This will later be a random range, most likely from 2 to 4
+                        ringCount = 1;
+
+                        //Instantiate First Target Ring
+                        circles.Add(Instantiate(circlePrefab));
+                        circles[0].transform.position = bobber.transform.position;
+                        circles[0].transform.localScale = new Vector3(1.65f, 1.65f);
+                        circles[0].GetComponent<SpriteRenderer>().color = Color.gray;
+                        circles[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal + 1;
+
+                        //Destroy notification & bobber
+                        Destroy(notification.gameObject);
+                        notification = null;
+                        Destroy(bobber.gameObject);
+                        bobber = null;
+
+                        //Instantiate First Target Cone
+                        targetCones.Add(Instantiate(conePrefab));
+                        targetCones[0].transform.position = circles[0].transform.position;
+                        float targetRot = Random.Range(-179, 179);
+                        targetCones[0].transform.eulerAngles = new Vector3(0, 0, targetRot);
+                        targetCones[0].transform.localScale = new Vector3(circles[0].transform.localScale.x / 22.5f, circles[0].transform.localScale.y / 22.5f);
+                        targetCones[0].GetComponent<SpriteRenderer>().color = Color.cyan;
+                        targetCones[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal + 2;
+
+                        //Instantiate First Moving Cone
+                        movingCones.Add(Instantiate(conePrefab));
+                        movingCones[0].transform.position = circles[0].transform.position;
+                        float startRot = Random.Range(-179, 179);
+                        movingCones[0].transform.eulerAngles = new Vector3(0, 0, startRot);
+                        movingCones[0].transform.localScale = new Vector3(circles[0].transform.localScale.x / 22.5f, circles[0].transform.localScale.y / 22.5f);
+                        movingCones[0].GetComponent<SpriteRenderer>().color = Color.white;
+                        movingCones[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal + 3;
+                        rotationSpeed = Random.Range(250, 500);
+
+                        //Instantiate Bullseye Center
+                        circles.Add(Instantiate(circlePrefab));
+                        circles[1].transform.position = circles[0].transform.position;
+                        circles[1].transform.localScale = new Vector3(1.15f, 1.15f);
+                        circles[1].GetComponent<SpriteRenderer>().color = Color.black;
+                        circles[1].GetComponent<SpriteRenderer>().sortingOrder = ringTotal + 4;
+
+                        break;
+
+                    //Line is cast, there is no bobber, there is no notification, and there is a fish on the line
+                    //(The player is moving through the mechanic, trying to catch the fish)
+                    case (true, true, true, true):
+                        
+                        ringCount++;
+
+                        //Measure rotation difference between target cone and moving cone
+                        float thisDifference = Quaternion.Angle(movingCones[movingCones.Count - 1].transform.rotation, targetCones[targetCones.Count - 1].transform.rotation);
+                        rotationDifference += thisDifference;
+
+                        if (ringCount > ringTotal) //If the player has completed their progression through the rings...
+                        {
+                            lineCast = false;
+                            fishOnTheLine = false;
+
+                            //Destroy All Mechanic Items
+                            foreach (GameObject tCone in targetCones) { Destroy(tCone.gameObject); }
+                            targetCones.Clear();
+                            foreach (GameObject mCone in movingCones) { Destroy(mCone.gameObject); }
+                            movingCones.Clear();
+                            foreach (GameObject circle in circles) { Destroy(circle.gameObject); }
+                            circles.Clear();
+
+                            //Determine a catch
+                            if (rotationDifference < (25.0f * ringTotal)) //this difficulty level will later be changed depending on the fish ur catching
+                            {
+                                fishCaught++;
+                                Debug.Log("Fish Caught with Rotation Difference " + rotationDifference);
+                            }
+                            else
+                            {
+                                fishFail = true;
+                                Debug.Log("Failed to Catch Fish with Rotation Difference " + rotationDifference);
+                            }
+                        }
+
+                        break;
+
+                    //Line is cast, there is a bobber, there is no notification, and there is no fish on the line
+                    //(The player is reeling in their line without a fish)
+                    case (true, true, false, false):
+
+                        Destroy(bobber.gameObject);
+                        bobber = null;
+                        lineCast = false;
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+        else //If the bobber is out of range of the player, meaning they cannot cast or cannot hold their line...
+        {
+            crosshair.GetComponent<SpriteRenderer>().color = Color.red;
+
+            if (lineCast) //If the line is cast, recall it
+            {
+                if (bobber != null)
+                {
+                    Destroy(bobber.gameObject);
+                    bobber = null;
+                }
+                lineCast = false;
+                fishOnTheLine = false;
+            }
+        }
+
+        if (movingCones.Count > 0) //if there is a moving cone, rotate it
+        {
+            movingCones[movingCones.Count - 1].transform.eulerAngles += new Vector3(0f, 0f, rotationSpeed * Time.deltaTime);
+        }
+
+        mouseLeftLastFrame = mouseLeftThisFrame;
+
+        #region First-Pass Mechanic
+        /*if (distance < range) //If the bobber is within range of the player, meaning the player can cast...
         {
             crosshair.GetComponent<SpriteRenderer>().color = Color.green;
 
@@ -246,9 +407,8 @@ public class Fishing : MonoBehaviour
         if (scalingCircle != null) //If a scalingCircle exists, scale it up
         {
             scalingCircle.transform.localScale += new Vector3(scaleSpeed * Time.deltaTime, scaleSpeed * Time.deltaTime);
-        }
-
-        mouseLeftLastFrame = mouseLeftThisFrame;
+        }*/
+        #endregion
     }
 
     //==== METHODS & COROUTINES ====

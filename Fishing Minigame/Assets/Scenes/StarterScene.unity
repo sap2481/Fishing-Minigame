@@ -404,6 +404,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: conePrefab
+      value: 
+      objectReference: {fileID: 8076593460426955088, guid: 661c7eaecb5d80f40a9e657994fe49a2, type: 3}
+    - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
       propertyPath: circlePrefab
       value: 
       objectReference: {fileID: 9218497257287703978, guid: 32dcccbbe12394f478399ae555da93a0, type: 3}
