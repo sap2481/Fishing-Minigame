@@ -19,28 +19,21 @@ public class Fishing : MonoBehaviour
     //Prefabs & Related GameObjects
     [SerializeField] GameObject crosshairPrefab;
     GameObject crosshair;
-    GameObject bobber; //Crosshair but a different color
+    GameObject bobber; //Crosshair but a different color, used when the player has cast their line
     [SerializeField] GameObject notificationPrefab;
     GameObject notification;
-
-    //First-Pass Mechanic Related Fields
-    float circleScale; //The scale of the target circle
-    float scaleSpeed; //The speed at which the scaling circle scales upwards
-    int ringTotal; //How many total rings this particular cast requires the player to go through - REQUIRED FOR PRIMARY MECHANIC    
-    int ringCount; //How many rings has the player currently gone through? - REQUIRED FOR PRIMARY MECHANIC
-    float scaleDifference; //The total difference in scales between target circles and their respective scaling circles.
     [SerializeField] GameObject circlePrefab;
-    GameObject targetCircle;
-    GameObject scalingCircle;
-    List<GameObject> circles;
 
     //Primary Mechanic Related Fields
     [SerializeField] GameObject conePrefab;
     List<GameObject> targetCones;
     List<GameObject> movingCones;
+    List<GameObject> circles;
     float rotationSpeed; //How fast the current moving cone is rotating
     float rotationDifference; //Difference in rotation between target cone and current moving cone
-    bool leftOrRight; //Left = false, right = true
+    bool leftOrRight; //Left = false, right = true ; Determines rotation of moving cone
+    int ringTotal; //How many total rings this particular cast requires the player to go through - REQUIRED FOR PRIMARY MECHANIC    
+    int ringCount; //How many rings has the player currently gone through? - REQUIRED FOR PRIMARY MECHANIC
 
     //Player
     GameObject player;
@@ -53,6 +46,13 @@ public class Fishing : MonoBehaviour
     float range; //The range at which a player can cast their line away from their ship
     float distance; //How far is the player attempting to cast?
     bool fishFail; //Declare if the player failed to catch a fish (used for the CatchTracker)
+
+    //First-Pass Mechanic Related Fields (DEPRECATED)
+    //float circleScale; //The scale of the target circle
+    //float scaleSpeed; //The speed at which the scaling circle scales upwards
+    //float scaleDifference; //The total difference in scales between target circles and their respective scaling circles.
+    //GameObject targetCircle;
+    //GameObject scalingCircle;
 
     //==== PROPERTIES ====
     public int FishCaught { get { return fishCaught; } }
@@ -83,11 +83,8 @@ public class Fishing : MonoBehaviour
         fishCaught = 0;
         numberOfCasts = 0;
         fishOnTheLine = false;
-        circleScale = 0;
-        scaleSpeed = 0;
         ringTotal = 0;
         ringCount = 0;
-        scaleDifference = 0;
         circles = new List<GameObject>();
         range = 4;
         distance = 0;
@@ -95,6 +92,12 @@ public class Fishing : MonoBehaviour
         rotationSpeed = 0;
         rotationDifference = 0;
         leftOrRight = false;
+
+        /*Deprecated Variable Initialization
+        circleScale = 0;
+        scaleSpeed = 0;
+        scaleDifference = 0;
+         * */
     }
 
     //==== UPDATE ====
@@ -148,7 +151,7 @@ public class Fishing : MonoBehaviour
                     case (true, false, false, false):
                         
                         fishOnTheLine = true;
-                        ringTotal = Random.Range(2, 4);
+                        ringTotal = Random.Range(2, 5);
                         ringCount = 1;
 
                         //Instantiate Bullseye Center
@@ -168,7 +171,7 @@ public class Fishing : MonoBehaviour
                         //Instantiate First Target Cone
                         targetCones.Add(Instantiate(conePrefab));
                         targetCones[0].transform.position = circles[0].transform.position;
-                        float targetRot = Random.Range(-179, 179);
+                        float targetRot = Random.Range(-179, 180);
                         targetCones[0].transform.eulerAngles = new Vector3(0, 0, targetRot);
                         targetCones[0].transform.localScale = new Vector3(circles[1].transform.localScale.x / 22.5f, circles[1].transform.localScale.y / 22.5f);
                         targetCones[0].GetComponent<SpriteRenderer>().color = Color.cyan;
@@ -177,7 +180,7 @@ public class Fishing : MonoBehaviour
                         //Instantiate First Moving Cone
                         movingCones.Add(Instantiate(conePrefab));
                         movingCones[0].transform.position = circles[0].transform.position;
-                        float startRot = Random.Range(-179, 179);
+                        float startRot = Random.Range(-179, 180);
                         movingCones[0].transform.eulerAngles = new Vector3(0, 0, startRot);
                         movingCones[0].transform.localScale = new Vector3(circles[1].transform.localScale.x / 22.5f, circles[1].transform.localScale.y / 22.5f);
                         movingCones[0].GetComponent<SpriteRenderer>().color = Color.white;
@@ -191,7 +194,7 @@ public class Fishing : MonoBehaviour
                         bobber = null;
 
                         //Decide Whether to Rotate Left or Right
-                        float directionPicker = Random.Range(1, 100);
+                        float directionPicker = Random.Range(1, 101);
                         if (directionPicker <= 50) { leftOrRight = false; } else { leftOrRight = true; }
 
                         break;
@@ -253,7 +256,7 @@ public class Fishing : MonoBehaviour
                             //Instantiate Next Target Cone
                             targetCones.Add(Instantiate(conePrefab));
                             targetCones[^1].transform.position = circles[0].transform.position;
-                            float targetRotation = Random.Range(-179, 179);
+                            float targetRotation = Random.Range(-179, 180);
                             targetCones[^1].transform.eulerAngles = new Vector3(0, 0, targetRotation);
                             targetCones[^1].transform.localScale = new Vector3(circles[^1].transform.localScale.x / 22.5f, circles[^1].transform.localScale.y / 22.5f);
                             targetCones[^1].GetComponent<SpriteRenderer>().color = Color.cyan;
@@ -262,7 +265,7 @@ public class Fishing : MonoBehaviour
                             //Instantiate Next Moving Cone
                             movingCones.Add(Instantiate(conePrefab));
                             movingCones[^1].transform.position = circles[0].transform.position;
-                            float startRotation = Random.Range(-179, 179);
+                            float startRotation = Random.Range(-179, 180);
                             movingCones[^1].transform.eulerAngles = new Vector3(0, 0, startRotation);
                             movingCones[^1].transform.localScale = new Vector3(circles[^1].transform.localScale.x / 22.5f, circles[^1].transform.localScale.y / 22.5f);
                             movingCones[^1].GetComponent<SpriteRenderer>().color = Color.white;
@@ -270,7 +273,7 @@ public class Fishing : MonoBehaviour
                             rotationSpeed = Random.Range(250, 500);
 
                             //Decide Whether to Rotate Left or Right
-                            float dirPicker = Random.Range(1, 100);
+                            float dirPicker = Random.Range(1, 101);
                             if (dirPicker <= 50) { leftOrRight = false; } else { leftOrRight = true; }
                         }
 

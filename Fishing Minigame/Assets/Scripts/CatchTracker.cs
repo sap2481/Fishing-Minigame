@@ -41,7 +41,7 @@ public class CatchTracker : MonoBehaviour
         //Restore Panel Color
         if (catchTracker_Panel.GetComponent<Image>().color.g > 0 || catchTracker_Panel.GetComponent<Image>().color.r > 0)
         {
-            catchTracker_Panel.GetComponent<Image>().color = new Color(catchTracker_Panel.GetComponent<Image>().color.r - 0.01f, catchTracker_Panel.GetComponent<Image>().color.g - 0.01f, 0f);
+            catchTracker_Panel.GetComponent<Image>().color = new Color(catchTracker_Panel.GetComponent<Image>().color.r - (1f * Time.deltaTime), catchTracker_Panel.GetComponent<Image>().color.g - (1f * Time.deltaTime), 0f);
         }
 
         prevFishCaught = fishingManager.FishCaught;

@@ -41,10 +41,11 @@ public class Environment : MonoBehaviour
     //==== UPDATE ====
     void Update()
     {
-        /*Change tile positions
+        //Change tile positions
         foreach (GameObject tile in tiles)
         {
-            if (Mathf.Abs(player.transform.position.x - tile.transform.position.x) > 15.2f)
+            float xDistance = Mathf.Abs(player.transform.position.x - tile.transform.position.x);
+            if (xDistance > (sizeValue * 4))
             {
                 if (player.transform.position.x > lastPlayerPos.x) //If the player is moving right, shift tiles to the right
                 {
@@ -57,8 +58,9 @@ public class Environment : MonoBehaviour
             }
         }
 
-        lastPlayerPos = player.transform.position;*/
+        lastPlayerPos = player.transform.position;
 
         //You're on the right track... kind of... I think
+        //No the FUCK you're not Sam.
     }
 }
