@@ -45,15 +45,28 @@ public class Environment : MonoBehaviour
         foreach (GameObject tile in tiles)
         {
             float xDistance = Mathf.Abs(player.transform.position.x - tile.transform.position.x);
-            if (xDistance > (sizeValue * 4))
+            if (xDistance >= (sizeValue * 4))
             {
                 if (player.transform.position.x > lastPlayerPos.x) //If the player is moving right, shift tiles to the right
                 {
-                    tile.transform.position = new Vector3(player.transform.position.x + (sizeValue * 4) - (player.transform.position.x % sizeValue), tile.transform.position.y);
+                    tile.transform.position = new Vector3(player.transform.position.x + (sizeValue * 3), tile.transform.position.y);
                 }
                 else //If the player is moving left, shift tiles to the left
                 {
-                    tile.transform.position = new Vector3(player.transform.position.x - (sizeValue * 4) - (player.transform.position.x % sizeValue), tile.transform.position.y);
+                    tile.transform.position = new Vector3(player.transform.position.x - (sizeValue * 3), tile.transform.position.y);
+                }
+            }
+
+            float yDistance = Mathf.Abs(player.transform.position.y - tile.transform.position.y);
+            if (yDistance >= (sizeValue * 4))
+            {
+                if (player.transform.position.y > lastPlayerPos.y) //If the player is moving up, shift tiles up
+                {
+                    tile.transform.position = new Vector3(tile.transform.position.x, player.transform.position.y + (sizeValue * 3));
+                }
+                else //If the player is moving down, shift tiles down
+                {
+                    tile.transform.position = new Vector3(tile.transform.position.x, player.transform.position.y - (sizeValue * 3));
                 }
             }
         }
@@ -61,6 +74,5 @@ public class Environment : MonoBehaviour
         lastPlayerPos = player.transform.position;
 
         //You're on the right track... kind of... I think
-        //No the FUCK you're not Sam.
     }
 }
