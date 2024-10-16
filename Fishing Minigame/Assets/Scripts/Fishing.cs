@@ -38,6 +38,10 @@ public class Fishing : MonoBehaviour
     //Player
     GameObject player;
 
+    //Fish
+    Fish fishInProgress;
+    List<Fish> fishList;
+
     //Other Values
     bool lineCast; //Is the line cast?
     int fishCaught; //Did the player catch a fish?
@@ -57,6 +61,7 @@ public class Fishing : MonoBehaviour
     //==== PROPERTIES ====
     public int FishCaught { get { return fishCaught; } }
     public bool FishFail { get { return fishFail; } set { fishFail = value; } }
+    public List<Fish> FishList { get { return fishList; } }
 
     //==== START ====
     void Start()
@@ -76,7 +81,9 @@ public class Fishing : MonoBehaviour
 
         //Instantiate Lists
         targetCones = new List<GameObject>();
-        movingCones = new List<GameObject>();   
+        movingCones = new List<GameObject>();
+        circles = new List<GameObject>();
+        fishList = new List<Fish>();
 
         //Initialize Other Values
         lineCast = false;
@@ -85,7 +92,6 @@ public class Fishing : MonoBehaviour
         fishOnTheLine = false;
         ringTotal = 0;
         ringCount = 0;
-        circles = new List<GameObject>();
         range = 4;
         distance = 0;
         fishFail = false;
@@ -152,6 +158,7 @@ public class Fishing : MonoBehaviour
                         
                         fishOnTheLine = true;
                         ringTotal = Random.Range(2, 5);
+                        fishInProgress = new Fish(ringTotal);
                         ringCount = 1;
 
                         //Instantiate Bullseye Center
@@ -223,18 +230,20 @@ public class Fishing : MonoBehaviour
                             circles.Clear();
 
                             //Determine a catch
-                            if (rotationDifference < (25.0f * ringTotal)) //this difficulty level will later be changed depending on the fish ur catching
+                            if (rotationDifference < fishInProgress.DifficultyLevel) //this difficulty level will later be changed depending on the fish ur catching
                             {
                                 fishCaught++;
-                                Debug.Log("Fish Caught with Rotation Difference " + rotationDifference);
+                                fishList.Add(fishInProgress);
+                                Debug.Log(fishInProgress.Name + " Caught with Rotation Difference " + rotationDifference);
                             }
                             else
                             {
                                 fishFail = true;
-                                Debug.Log("Failed to Catch Fish with Rotation Difference " + rotationDifference);
+                                Debug.Log("Failed to Catch " + fishInProgress.Name + " with Rotation Difference " + rotationDifference);
                             }
 
                             rotationDifference = 0;
+                            fishInProgress = null;
                         }
                         else //If the player still has rings to traverse through...
                         {
@@ -300,11 +309,20 @@ public class Fishing : MonoBehaviour
 
             if (lineCast) //If the line is cast, recall it
             {
-                if (bobber != null)
+                if (bobber != null) //If the bobber exists, destroy it
                 {
                     Destroy(bobber.gameObject);
                     bobber = null;
                 }
+
+                //Destroy All Mechanic-Related Cones & Circles
+                foreach (GameObject tCone in targetCones) { Destroy(tCone.gameObject); }
+                targetCones.Clear();
+                foreach (GameObject mCone in movingCones) { Destroy(mCone.gameObject); }
+                movingCones.Clear();
+                foreach (GameObject circle in circles) { Destroy(circle.gameObject); }
+                circles.Clear();
+
                 lineCast = false;
                 fishOnTheLine = false;
             }

@@ -72,7 +72,5 @@ public class Environment : MonoBehaviour
         }
 
         lastPlayerPos = player.transform.position;
-
-        //You're on the right track... kind of... I think
     }
 }
