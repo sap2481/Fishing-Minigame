@@ -165,14 +165,14 @@ public class Fishing : MonoBehaviour
                         //Instantiate Bullseye Center
                         circles.Add(Instantiate(circlePrefab));
                         circles[0].transform.position = bobber.transform.position;
-                        circles[0].transform.localScale = new Vector3(1.15f, 1.15f);
+                        circles[0].transform.localScale = new Vector3(0.8f, 0.8f);
                         circles[0].GetComponent<SpriteRenderer>().color = Color.black;
                         circles[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4 + 4;
 
                         //Instantiate First Target Ring
                         circles.Add(Instantiate(circlePrefab));
                         circles[1].transform.position = circles[0].transform.position;
-                        circles[1].transform.localScale = new Vector3(1.65f, 1.65f);
+                        circles[1].transform.localScale = new Vector3(1.3f, 1.3f);
                         circles[1].gameObject.GetComponent<SpriteRenderer>().color = new Color32(50, 50, 50, 255);
                         circles[1].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4;
 
