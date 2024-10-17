@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     public Vector3 Position { get { return position; } }
     public Vector3 Direction { get { return direction; } }
     public Vector3 Velocity { get { return velocity; } }
-    public float MaxSpeed { get { return maxSpeed; } }
+    public float MaxSpeed { get { return maxSpeed; } set { maxSpeed = value; } }
     public float Acceleration { get { return accel; } }
 
     //==== START ====
@@ -142,8 +142,8 @@ public class Player : MonoBehaviour
         if (IsMoving())
         {
             float xSpeed; float ySpeed;
-            if (leftSpeed > 0f) { xSpeed = leftSpeed; } else if (rightSpeed > 0f) { xSpeed = rightSpeed; } else { xSpeed = 0f; }
-            if (downSpeed > 0f) { ySpeed = -downSpeed; } else if (upSpeed > 0f) { ySpeed = upSpeed; } else { ySpeed = 0f; }
+            if (leftSpeed > 0f) { xSpeed = leftSpeed; } else if (rightSpeed > 0f) { xSpeed = rightSpeed; } else { xSpeed = .1f; }
+            if (downSpeed > 0f) { ySpeed = -downSpeed; } else if (upSpeed > 0f) { ySpeed = upSpeed; } else { ySpeed = .1f; }
             Vector3 moveDirection = new Vector3(xSpeed, ySpeed, 0);
             moveDirection.Normalize();
             if (moveDirection != Vector3.zero)

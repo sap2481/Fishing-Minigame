@@ -12,7 +12,7 @@ public class Fish : MonoBehaviour
     Sprite sprite; //The relevant fish sprite (this will not come into play until Lydia gives me art)
 
     //Name Arrays
-    string[] twoRingNames =  { "Sardine, Clownfish, Koi" };
+    string[] twoRingNames =  { "Sardine", "Clownfish", "Koi" };
     string[] threeRingNames = { "Pufferfish", "Sting Ray", "Squid" };
     string[] fourRingNames = { "Moray Eel", "Hammerhead Shark", "Great White Shark" };
 

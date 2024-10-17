@@ -62,6 +62,7 @@ public class Fishing : MonoBehaviour
     public int FishCaught { get { return fishCaught; } }
     public bool FishFail { get { return fishFail; } set { fishFail = value; } }
     public List<Fish> FishList { get { return fishList; } }
+    public float Range { get { return range; } set { range = value; } }
 
     //==== START ====
     void Start()
@@ -166,14 +167,14 @@ public class Fishing : MonoBehaviour
                         circles[0].transform.position = bobber.transform.position;
                         circles[0].transform.localScale = new Vector3(1.15f, 1.15f);
                         circles[0].GetComponent<SpriteRenderer>().color = Color.black;
-                        circles[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 3 + 4;
+                        circles[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4 + 4;
 
                         //Instantiate First Target Ring
                         circles.Add(Instantiate(circlePrefab));
                         circles[1].transform.position = circles[0].transform.position;
                         circles[1].transform.localScale = new Vector3(1.65f, 1.65f);
                         circles[1].gameObject.GetComponent<SpriteRenderer>().color = new Color32(50, 50, 50, 255);
-                        circles[1].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 3;
+                        circles[1].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4;
 
                         //Instantiate First Target Cone
                         targetCones.Add(Instantiate(conePrefab));
@@ -182,7 +183,7 @@ public class Fishing : MonoBehaviour
                         targetCones[0].transform.eulerAngles = new Vector3(0, 0, targetRot);
                         targetCones[0].transform.localScale = new Vector3(circles[1].transform.localScale.x / 22.5f, circles[1].transform.localScale.y / 22.5f);
                         targetCones[0].GetComponent<SpriteRenderer>().color = Color.cyan;
-                        targetCones[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 3 + 2;
+                        targetCones[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4 + 2;
 
                         //Instantiate First Moving Cone
                         movingCones.Add(Instantiate(conePrefab));
@@ -191,7 +192,7 @@ public class Fishing : MonoBehaviour
                         movingCones[0].transform.eulerAngles = new Vector3(0, 0, startRot);
                         movingCones[0].transform.localScale = new Vector3(circles[1].transform.localScale.x / 22.5f, circles[1].transform.localScale.y / 22.5f);
                         movingCones[0].GetComponent<SpriteRenderer>().color = Color.white;
-                        movingCones[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 3 + 3;
+                        movingCones[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4 + 3;
                         rotationSpeed = Random.Range(250, 400);
 
                         //Destroy notification & bobber
@@ -260,7 +261,7 @@ public class Fishing : MonoBehaviour
                             circles[^1].transform.position = circles[0].transform.position;
                             circles[^1].transform.localScale = new Vector3(circles[^2].transform.localScale.x + .5f, circles[^2].transform.localScale.y + .5f);
                             circles[^1].GetComponent<SpriteRenderer>().color = new Color32((byte)(ringCount * 50), (byte)(ringCount * 50), (byte)(ringCount * 50), 255);
-                            circles[^1].GetComponent<SpriteRenderer>().sortingOrder = circles[^2].GetComponent<SpriteRenderer>().sortingOrder - 3;
+                            circles[^1].GetComponent<SpriteRenderer>().sortingOrder = circles[^2].GetComponent<SpriteRenderer>().sortingOrder - 4;
 
                             //Instantiate Next Target Cone
                             targetCones.Add(Instantiate(conePrefab));
@@ -269,7 +270,7 @@ public class Fishing : MonoBehaviour
                             targetCones[^1].transform.eulerAngles = new Vector3(0, 0, targetRotation);
                             targetCones[^1].transform.localScale = new Vector3(circles[^1].transform.localScale.x / 22.5f, circles[^1].transform.localScale.y / 22.5f);
                             targetCones[^1].GetComponent<SpriteRenderer>().color = Color.cyan;
-                            targetCones[^1].GetComponent<SpriteRenderer>().sortingOrder = targetCones[^2].GetComponent<SpriteRenderer>().sortingOrder - 3;
+                            targetCones[^1].GetComponent<SpriteRenderer>().sortingOrder = targetCones[^2].GetComponent<SpriteRenderer>().sortingOrder - 4;
 
                             //Instantiate Next Moving Cone
                             movingCones.Add(Instantiate(conePrefab));
@@ -278,7 +279,7 @@ public class Fishing : MonoBehaviour
                             movingCones[^1].transform.eulerAngles = new Vector3(0, 0, startRotation);
                             movingCones[^1].transform.localScale = new Vector3(circles[^1].transform.localScale.x / 22.5f, circles[^1].transform.localScale.y / 22.5f);
                             movingCones[^1].GetComponent<SpriteRenderer>().color = Color.white;
-                            movingCones[^1].GetComponent<SpriteRenderer>().sortingOrder = movingCones[^2].GetComponent<SpriteRenderer>().sortingOrder - 3;
+                            movingCones[^1].GetComponent<SpriteRenderer>().sortingOrder = movingCones[^2].GetComponent<SpriteRenderer>().sortingOrder - 4;
                             rotationSpeed = Random.Range(250, 500);
 
                             //Decide Whether to Rotate Left or Right
