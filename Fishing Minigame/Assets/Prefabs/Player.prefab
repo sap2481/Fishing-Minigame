@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5394847115500969648}
   - component: {fileID: 1587746309094844594}
   - component: {fileID: 49514252720143956}
-  - component: {fileID: 48317370686432214}
   - component: {fileID: -379841758902571932}
   m_Layer: 0
   m_Name: Player
@@ -31,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1.1875, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -76,8 +75,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 0e157a45d4ea087499c85b0428d93859, type: 3}
+  m_SortingOrder: 5
+  m_Sprite: {fileID: 21300000, guid: bce1274ff1c2be744876e1a695e90d97, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -118,22 +117,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crosshairPrefab: {fileID: 371909100517979966, guid: 9d3e07cb77a8a0940b5a4e489a2b79f8, type: 3}
   notificationPrefab: {fileID: 3634794862189123736, guid: be3345a0323a65f4b913a5f872d0dd2e, type: 3}
-  circlePrefab: {fileID: 0}
-  conePrefab: {fileID: 0}
---- !u!114 &48317370686432214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8142380880739535495}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bfe8941524ee984296496546eb3252f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  menuPrefab: {fileID: 0}
-  tempFishSprite: {fileID: 0}
+  circlePrefab: {fileID: 9218497257287703978, guid: 32dcccbbe12394f478399ae555da93a0, type: 3}
+  whirlpoolPrefab: {fileID: 2313210453759898506, guid: f9dd8e9fb5db8a34fb42ce5cf592a566, type: 3}
+  conePrefab: {fileID: 8076593460426955088, guid: 661c7eaecb5d80f40a9e657994fe49a2, type: 3}
+  collisions: {fileID: 0}
 --- !u!114 &-379841758902571932
 MonoBehaviour:
   m_ObjectHideFlags: 0

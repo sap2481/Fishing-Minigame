@@ -7,9 +7,14 @@ public class Environment : MonoBehaviour
     //==== FIELDS ====
     [SerializeField] GameObject oceanTile; //Ocean Tile Prefab
     List<GameObject> tiles; //List of tile prefabs
+    [SerializeField] GameObject waterHolder; //Parent to hold the water tiles
+
     GameObject player;
     Vector3 lastPlayerPos;
-    [SerializeField] GameObject waterHolder;
+
+    [SerializeField] GameObject rockPrefab;
+    List<GameObject> rocks; 
+    [SerializeField] GameObject rockHolder;
 
     float x, y;
     float sizeValue;
@@ -18,6 +23,7 @@ public class Environment : MonoBehaviour
     void Start()
     {
         tiles = new List<GameObject>();
+        rocks = new List<GameObject>();
         player = GameObject.FindGameObjectWithTag("Player");
         lastPlayerPos = Vector3.zero;
         sizeValue = 3.8f;
@@ -35,6 +41,12 @@ public class Environment : MonoBehaviour
             }
             x = sizeValue * 3;
             y -= sizeValue;
+        }
+
+        //Create Rocks
+        for (int i = 0; i < 10; i++)
+        {
+            rocks.Add(Instantiate(rockPrefab, new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f)), Quaternion.identity, rockHolder.transform));
         }
     }
 

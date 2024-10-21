@@ -153,6 +153,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &334023664
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 334023665}
+  m_Layer: 0
+  m_Name: RockHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &334023665
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 334023664}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &349884062
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,6 +332,7 @@ GameObject:
   - component: {fileID: 428767368}
   - component: {fileID: 428767369}
   - component: {fileID: 428767370}
+  - component: {fileID: 428767371}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -396,6 +428,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   oceanTile: {fileID: 8182076160925582780, guid: b57524851ae679745a39419290b1898a, type: 3}
   waterHolder: {fileID: 6272370}
+  rockPrefab: {fileID: 3981002443483623855, guid: 0cc4b2800e34c1c4aa9c13fd19b7f0c9, type: 3}
+  rockHolder: {fileID: 334023664}
 --- !u!114 &428767370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,6 +444,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuPrefab: {fileID: 8845456324351477861, guid: 92cf5052591024f4996bb6891310e986, type: 3}
   tempFishSprite: {fileID: 21300000, guid: 3b1e64c9855e9d34286258a294b319b2, type: 3}
+--- !u!114 &428767371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428767364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3122acd195c47014db5cdefb41f69b12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &591024127
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 591024128}
+  m_Layer: 0
+  m_Name: WhirlpoolHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &591024128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591024127}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &778806722
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,14 +571,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 48317370686432214, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
-      propertyPath: menuPrefab
+    - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: collisions
       value: 
-      objectReference: {fileID: 8845456324351477861, guid: 92cf5052591024f4996bb6891310e986, type: 3}
-    - target: {fileID: 48317370686432214, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
-      propertyPath: tempFishSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 3b1e64c9855e9d34286258a294b319b2, type: 3}
+      objectReference: {fileID: 428767371}
     - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
       propertyPath: conePrefab
       value: 
@@ -510,6 +583,10 @@ PrefabInstance:
       propertyPath: circlePrefab
       value: 
       objectReference: {fileID: 9218497257287703978, guid: 32dcccbbe12394f478399ae555da93a0, type: 3}
+    - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: whirlpoolHolder
+      value: 
+      objectReference: {fileID: 591024127}
     - target: {fileID: 4597014426364639718, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -555,7 +632,7 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 48317370686432214, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -762,4 +839,6 @@ SceneRoots:
   - {fileID: 2075984482}
   - {fileID: 428767367}
   - {fileID: 6272371}
+  - {fileID: 591024128}
+  - {fileID: 334023665}
   - {fileID: 1345261134}

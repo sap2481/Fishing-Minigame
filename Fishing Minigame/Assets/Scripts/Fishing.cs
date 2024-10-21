@@ -23,6 +23,9 @@ public class Fishing : MonoBehaviour
     [SerializeField] GameObject notificationPrefab;
     GameObject notification;
     [SerializeField] GameObject circlePrefab;
+    [SerializeField] GameObject whirlpoolPrefab;
+    List<GameObject> whirlpools;
+    [SerializeField] GameObject whirlpoolHolder;
 
     //Primary Mechanic Related Fields
     [SerializeField] GameObject conePrefab;
@@ -38,6 +41,9 @@ public class Fishing : MonoBehaviour
     //Player
     GameObject player;
 
+    //Collisions
+    [SerializeField] Collisions collisions;
+
     //Fish
     Fish fishInProgress;
     List<Fish> fishList;
@@ -50,6 +56,7 @@ public class Fishing : MonoBehaviour
     float range; //The range at which a player can cast their line away from their ship
     float distance; //How far is the player attempting to cast?
     bool fishFail; //Declare if the player failed to catch a fish (used for the CatchTracker)
+    float whirlpoolRotSpeed; //How fast the whirlpools rotate
 
     //First-Pass Mechanic Related Fields (DEPRECATED)
     //float circleScale; //The scale of the target circle
@@ -85,6 +92,13 @@ public class Fishing : MonoBehaviour
         movingCones = new List<GameObject>();
         circles = new List<GameObject>();
         fishList = new List<Fish>();
+        whirlpools = new List<GameObject>();
+
+        //Instantiate Whirlpools
+        for (int i = 0; i < 10; i++)
+        {
+            whirlpools.Add(Instantiate(whirlpoolPrefab, new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f)), Quaternion.identity, whirlpoolHolder.transform));
+        }
 
         //Initialize Other Values
         lineCast = false;
@@ -99,6 +113,7 @@ public class Fishing : MonoBehaviour
         rotationSpeed = 0;
         rotationDifference = 0;
         leftOrRight = false;
+        whirlpoolRotSpeed = 50;
 
         /*Deprecated Variable Initialization
         circleScale = 0;
@@ -149,7 +164,16 @@ public class Fishing : MonoBehaviour
                         bobber.transform.position = mousePosition;
                         bobber.GetComponent<SpriteRenderer>().color = Color.yellow;
                         numberOfCasts++;
-                        StartCoroutine(WaitForFish(Random.Range(3.0f, 5.0f), numberOfCasts));
+                        float waitingTime = Random.Range(10f, 15f);
+                        foreach (GameObject whirlpool in whirlpools)
+                        {
+                            if (collisions.CheckCollision(whirlpool, bobber))
+                            {
+                                waitingTime = Random.Range(3.0f, 5.0f);
+                                break;
+                            }
+                        }
+                        StartCoroutine(WaitForFish(waitingTime, numberOfCasts));
                         
                         break;
                     
@@ -162,17 +186,27 @@ public class Fishing : MonoBehaviour
                         fishInProgress = new Fish(ringTotal);
                         ringCount = 1;
 
+                        //Move Whirlpool If Applicable
+                        foreach (GameObject whirlpool in whirlpools)
+                        {
+                            if (collisions.CheckCollision(whirlpool, bobber))
+                            {
+                                whirlpool.transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30));
+                                break;
+                            }
+                        }
+
                         //Instantiate Bullseye Center
                         circles.Add(Instantiate(circlePrefab));
                         circles[0].transform.position = bobber.transform.position;
-                        circles[0].transform.localScale = new Vector3(0.8f, 0.8f);
+                        circles[0].transform.localScale = new Vector3(0.5f, 0.5f);
                         circles[0].GetComponent<SpriteRenderer>().color = Color.black;
                         circles[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4 + 4;
 
                         //Instantiate First Target Ring
                         circles.Add(Instantiate(circlePrefab));
                         circles[1].transform.position = circles[0].transform.position;
-                        circles[1].transform.localScale = new Vector3(1.3f, 1.3f);
+                        circles[1].transform.localScale = new Vector3(1.0f, 1.0f);
                         circles[1].gameObject.GetComponent<SpriteRenderer>().color = new Color32(50, 50, 50, 255);
                         circles[1].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4;
 
@@ -291,7 +325,7 @@ public class Fishing : MonoBehaviour
 
                     //Line is cast, there is a bobber, there is no notification, and there is no fish on the line
                     //(The player is reeling in their line without a fish)
-                    case (true, true, false, false):
+                    case (true, false, true, false):
 
                         Destroy(bobber.gameObject);
                         bobber = null;
@@ -339,6 +373,12 @@ public class Fishing : MonoBehaviour
             {
                 movingCones[^1].transform.eulerAngles -= new Vector3(0f, 0f, rotationSpeed * Time.deltaTime);
             }
+        }
+
+        //Rotate Whirlpools
+        foreach (GameObject whirlpool in whirlpools)
+        {
+            whirlpool.transform.eulerAngles += new Vector3(0f, 0f, whirlpoolRotSpeed * Time.deltaTime);
         }
 
         mouseLeftLastFrame = mouseLeftThisFrame;
@@ -496,7 +536,7 @@ public class Fishing : MonoBehaviour
         if (lineCast && currentCastNum == numberOfCasts) //If the line is still cast after the wait time has passed, and is still on the current cast...
         {
             notification = Instantiate(notificationPrefab);
-            notification.transform.position = new Vector3(bobber.transform.position.x, bobber.transform.position.y + 1.5f, bobber.transform.position.z);
+            notification.transform.position = new Vector3(bobber.transform.position.x, bobber.transform.position.y + 0.75f, bobber.transform.position.z);
             yield return new WaitForSeconds(1.0f);
             if (notification != null) //If the notification hasn't been destroyed yet (aka if the player hasn't caught the fish), destroy the notification.
             {
