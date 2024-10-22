@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,6 +21,12 @@ public class Player : MonoBehaviour
     private float maxSpeed = 5f;
     private float accel = 0.05f;
 
+    bool bounceback = false;
+    GameObject collidingObj;
+    float hull = 100f; //Health
+    bool sinking = false; //When the player reaches 0 hull, the boat sinks & the player resets
+    bool resetTiles; //Tells the environment to reset the tiles properly
+
     //Camera
     Camera cam;
     float camHeight;
@@ -31,6 +38,9 @@ public class Player : MonoBehaviour
     public Vector3 Velocity { get { return velocity; } }
     public float MaxSpeed { get { return maxSpeed; } set { maxSpeed = value; } }
     public float Acceleration { get { return accel; } }
+    public bool Bounceback { get { return bounceback; } set { bounceback = value; } }
+    public float Hull { get { return hull; } set { hull = value; } }
+    public bool ResetTiles { get { return resetTiles; } set { resetTiles = value; } }
 
     //==== START ====
     void Start()
@@ -159,25 +169,51 @@ public class Player : MonoBehaviour
             }
         }
 
-        //Set velocity
-        //Find X-Velocity
-        if (leftSpeed > 0f) { velocity.x = -leftSpeed * Time.deltaTime; }
-        else if (rightSpeed > 0f) { velocity.x = rightSpeed * Time.deltaTime; }
-        else { velocity.x = 0f; }
+        if (bounceback) //If the player is bouncing back from a collision, do that
+        {
+            Vector3 bounceDir = (transform.position - collidingObj.transform.position).normalized;
+            velocity = bounceDir * 5f * Time.deltaTime;
+            position += velocity;
+            transform.position = position;
+        }
+        else //If the player is not bouncing back from a collision, move as normal
+        {
+            //Set velocity
+            //Find X-Velocity
+            if (leftSpeed > 0f) { velocity.x = -leftSpeed * Time.deltaTime; }
+            else if (rightSpeed > 0f) { velocity.x = rightSpeed * Time.deltaTime; }
+            else { velocity.x = 0f; }
 
-        //Find Y-Velocity
-        if (upSpeed > 0f) { velocity.y = upSpeed * Time.deltaTime; }
-        else if (downSpeed > 0f) { velocity.y = -downSpeed * Time.deltaTime; }
-        else { velocity.y = 0f; }
+            //Find Y-Velocity
+            if (upSpeed > 0f) { velocity.y = upSpeed * Time.deltaTime; }
+            else if (downSpeed > 0f) { velocity.y = -downSpeed * Time.deltaTime; }
+            else { velocity.y = 0f; }
 
-        //Set position
-        position += velocity;
-        transform.position = position;
+            //Set position
+            position += velocity;
+            transform.position = position;
+        }
 
         //If moving, store the direction
         if (IsMoving())
         {
             storedDirection = direction;
+        }
+
+        if (hull <= 0) { sinking = true; } //if the player reaches 0 Hull, start sinking the ship
+        if (sinking) //If the ship is sinking...
+        {
+            this.transform.localScale -= new Vector3(0.5f * Time.deltaTime, 0.5f * Time.deltaTime);
+            leftSpeed = 0f; rightSpeed = 0f; upSpeed = 0f; downSpeed = 0f;
+            if (this.transform.localScale.x <= 0f) //When the ship has "sunk", reset it
+            {
+                this.gameObject.GetComponent<Fishing>().FishList.Clear();
+                this.transform.localScale = new Vector3(0.5f, 0.5f);
+                position = new Vector3(0, 0, 0);
+                hull = 100;
+                sinking = false;
+                resetTiles = true;
+            }
         }
     }
 
@@ -199,5 +235,18 @@ public class Player : MonoBehaviour
         {
             return false;
         }
+    }
+    
+    public void StartBounceback(GameObject collidingObj)
+    {
+        this.collidingObj = collidingObj;
+        bounceback = true;
+        StartCoroutine(BouncebackTimer(0.25f));
+    }
+
+    private IEnumerator BouncebackTimer(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        bounceback = false;
     }
 }

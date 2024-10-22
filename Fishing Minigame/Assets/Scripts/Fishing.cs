@@ -68,7 +68,7 @@ public class Fishing : MonoBehaviour
     //==== PROPERTIES ====
     public int FishCaught { get { return fishCaught; } }
     public bool FishFail { get { return fishFail; } set { fishFail = value; } }
-    public List<Fish> FishList { get { return fishList; } }
+    public List<Fish> FishList { get { return fishList; } set { fishList = value; } }
     public float Range { get { return range; } set { range = value; } }
 
     //==== START ====

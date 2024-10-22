@@ -18,6 +18,8 @@ public class Environment : MonoBehaviour
 
     float x, y;
     float sizeValue;
+
+    [SerializeField] Collisions collisions;
     
     //==== START ====
     void Start()
@@ -81,6 +83,20 @@ public class Environment : MonoBehaviour
                     tile.transform.position = new Vector3(tile.transform.position.x, player.transform.position.y - (sizeValue * 3));
                 }
             }
+        }
+
+        //Check for Collisions with Rocks
+        foreach (GameObject rock in rocks)
+        {
+            if (collisions.CheckCollision(rock, player)) {
+                player.GetComponent<Player>().StartBounceback(rock);
+                player.GetComponent<Player>().Hull -= 10;
+            }
+        }
+
+        if (player.GetComponent<Player>().ResetTiles) //Proper tile placement reset goes here.
+        {
+
         }
 
         lastPlayerPos = player.transform.position;
