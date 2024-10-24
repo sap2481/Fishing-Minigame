@@ -96,7 +96,25 @@ public class Environment : MonoBehaviour
 
         if (player.GetComponent<Player>().ResetTiles) //Proper tile placement reset goes here.
         {
+            foreach (GameObject tile in tiles) { Destroy(tile); }
+            tiles.Clear();
 
+            x = sizeValue * 3;
+            y = sizeValue * 3;
+
+            //Create Initial Series of Tiles
+            for (int i = 0; i < 7; i++)
+            {
+                for (int j = 0; j < 7; j++)
+                {
+                    tiles.Add(Instantiate(oceanTile, new Vector3(x, y, 0), Quaternion.identity, waterHolder.transform));
+                    x -= sizeValue;
+                }
+                x = sizeValue * 3;
+                y -= sizeValue;
+            }
+
+            player.GetComponent<Player>().ResetTiles = false;
         }
 
         lastPlayerPos = player.transform.position;
