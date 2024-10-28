@@ -66,7 +66,7 @@ public class Fishing : MonoBehaviour
     //GameObject scalingCircle;
 
     //==== PROPERTIES ====
-    public int FishCaught { get { return fishCaught; } }
+    public int FishCaught { get { return fishCaught; } set { fishCaught = value; } }
     public bool FishFail { get { return fishFail; } set { fishFail = value; } }
     public List<Fish> FishList { get { return fishList; } set { fishList = value; } }
     public float Range { get { return range; } set { range = value; } }
@@ -536,7 +536,7 @@ public class Fishing : MonoBehaviour
         if (lineCast && currentCastNum == numberOfCasts) //If the line is still cast after the wait time has passed, and is still on the current cast...
         {
             notification = Instantiate(notificationPrefab);
-            notification.transform.position = new Vector3(bobber.transform.position.x, bobber.transform.position.y + 0.75f, bobber.transform.position.z);
+            notification.transform.position = new Vector3(bobber.transform.position.x, bobber.transform.position.y + 1.25f, bobber.transform.position.z);
             yield return new WaitForSeconds(1.0f);
             if (notification != null) //If the notification hasn't been destroyed yet (aka if the player hasn't caught the fish), destroy the notification.
             {

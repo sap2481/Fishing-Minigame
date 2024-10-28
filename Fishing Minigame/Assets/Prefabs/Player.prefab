@@ -116,9 +116,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crosshairPrefab: {fileID: 371909100517979966, guid: 9d3e07cb77a8a0940b5a4e489a2b79f8, type: 3}
-  notificationPrefab: {fileID: 3634794862189123736, guid: be3345a0323a65f4b913a5f872d0dd2e, type: 3}
+  notificationPrefab: {fileID: 6084230703731766475, guid: e54329d3761e95d4ea49f684459ea44e, type: 3}
   circlePrefab: {fileID: 9218497257287703978, guid: 32dcccbbe12394f478399ae555da93a0, type: 3}
   whirlpoolPrefab: {fileID: 2313210453759898506, guid: f9dd8e9fb5db8a34fb42ce5cf592a566, type: 3}
+  whirlpoolHolder: {fileID: 0}
   conePrefab: {fileID: 8076593460426955088, guid: 661c7eaecb5d80f40a9e657994fe49a2, type: 3}
   collisions: {fileID: 0}
 --- !u!114 &-379841758902571932

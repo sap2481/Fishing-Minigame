@@ -45,6 +45,7 @@ public class Menu : MonoBehaviour
             {
                 menuActive = true;
                 menuInstance = Instantiate(menuPrefab);
+                menuInstance.transform.GetChild(0).GetChild(0).GetChild(3).GetComponent<Button>().onClick.AddListener(ResetClicked);
 
                 maxSpeedStorage = player.GetComponent<Player>().MaxSpeed;
                 player.GetComponent<Player>().MaxSpeed = 0;
@@ -87,5 +88,24 @@ public class Menu : MonoBehaviour
         }
 
         escKeyPressedLastFrame = escKeyPressedThisFrame;
+    }
+
+    //==== METHODS & COROUTINES ====
+    void ResetClicked()
+    {
+        Debug.Log("Game Reset.");
+
+        player.GetComponent<Player>().ResetTiles = true;
+        player.GetComponent<Player>().Position = new Vector3(0, 0, 0);
+        player.GetComponent<Player>().Hull = 100;
+        player.GetComponent<Fishing>().FishCaught = 0;
+        player.GetComponent<Fishing>().FishList.Clear();
+
+        menuActive = false;
+        Destroy(menuInstance.gameObject);
+        menuInstance = null;
+
+        player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
+        player.GetComponent<Fishing>().Range = rangeStorage;
     }
 }

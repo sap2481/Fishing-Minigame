@@ -94,7 +94,7 @@ public class Environment : MonoBehaviour
             }
         }
 
-        if (player.GetComponent<Player>().ResetTiles) //Proper tile placement reset goes here.
+        if (player.GetComponent<Player>().ResetTiles) //Reset tile placement around player placement
         {
             foreach (GameObject tile in tiles) { Destroy(tile); }
             tiles.Clear();

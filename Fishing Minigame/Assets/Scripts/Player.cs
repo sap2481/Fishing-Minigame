@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -33,7 +32,7 @@ public class Player : MonoBehaviour
     float camWidth;
 
     //==== PROPERTIES ====
-    public Vector3 Position { get { return position; } }
+    public Vector3 Position { get { return position; } set { position = value; } }
     public Vector3 Direction { get { return direction; } }
     public Vector3 Velocity { get { return velocity; } }
     public float MaxSpeed { get { return maxSpeed; } set { maxSpeed = value; } }
