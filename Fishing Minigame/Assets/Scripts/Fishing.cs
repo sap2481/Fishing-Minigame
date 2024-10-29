@@ -128,8 +128,6 @@ public class Fishing : MonoBehaviour
     //==== UPDATE ====
     void Update()
     {
-        Debug.Log(range);
-        
         mouseLeftThisFrame = Mouse.current.leftButton.IsPressed(); //Get current mouse-press state
         crosshair.transform.position = mousePosition; //Set crosshair to mouse position
 

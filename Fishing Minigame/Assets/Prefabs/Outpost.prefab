@@ -99,3 +99,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   opMenuPrefab: {fileID: 8078243606478333977, guid: c96c839a2d5949a488b60acf39912fe3, type: 3}
   collisions: {fileID: 0}
+  fishSellPrefab: {fileID: 9122386686187990680, guid: b12afc8fe2709a448950ab73358c09a9, type: 3}

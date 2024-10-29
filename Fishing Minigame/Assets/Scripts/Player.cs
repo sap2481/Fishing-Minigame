@@ -31,6 +31,8 @@ public class Player : MonoBehaviour
     float camHeight;
     float camWidth;
 
+    float money;
+
     //==== PROPERTIES ====
     public Vector3 Position { get { return position; } set { position = value; } }
     public Vector3 Direction { get { return direction; } }
@@ -40,6 +42,7 @@ public class Player : MonoBehaviour
     public bool Bounceback { get { return bounceback; } set { bounceback = value; } }
     public float Hull { get { return hull; } set { hull = value; } }
     public bool ResetTiles { get { return resetTiles; } set { resetTiles = value; } }
+    public float Money { get { return money; } set { money = value; } }
 
     //==== START ====
     void Start()

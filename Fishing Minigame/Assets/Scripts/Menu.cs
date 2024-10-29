@@ -14,7 +14,6 @@ public class Menu : MonoBehaviour
     bool escKeyPressedLastFrame;
     bool escKeyPressedThisFrame;
     bool menuActive;
-    bool fishSelected;
 
     float maxSpeedStorage;
 
@@ -28,7 +27,6 @@ public class Menu : MonoBehaviour
         escKeyPressedLastFrame = false;
         escKeyPressedThisFrame = false;
         menuActive = false;
-        fishSelected = false;
 
         player = GameObject.FindGameObjectWithTag("Player");
     }
