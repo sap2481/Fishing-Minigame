@@ -54,6 +54,7 @@ public class Fishing : MonoBehaviour
     int numberOfCasts; //Make sure that each cast is independent of each other cast (aka make sure that the timing of a previous cast doesn't carry over to the next)
     bool fishOnTheLine; //Is a fish on the line?
     float range; //The range at which a player can cast their line away from their ship
+    float rangeStorage; //Range gets changed around a bunch, so I need a property that maintains the current range value
     float distance; //How far is the player attempting to cast?
     bool fishFail; //Declare if the player failed to catch a fish (used for the CatchTracker)
     float whirlpoolRotSpeed; //How fast the whirlpools rotate
@@ -70,6 +71,7 @@ public class Fishing : MonoBehaviour
     public bool FishFail { get { return fishFail; } set { fishFail = value; } }
     public List<Fish> FishList { get { return fishList; } set { fishList = value; } }
     public float Range { get { return range; } set { range = value; } }
+    public float RangeStorage { get { return rangeStorage; } set { rangeStorage = value; } }
 
     //==== START ====
     void Start()
@@ -108,6 +110,7 @@ public class Fishing : MonoBehaviour
         ringTotal = 0;
         ringCount = 0;
         range = 4;
+        rangeStorage = range; //this is a bad solution because range will eventually be upgradeable, come back to it
         distance = 0;
         fishFail = false;
         rotationSpeed = 0;
@@ -125,6 +128,8 @@ public class Fishing : MonoBehaviour
     //==== UPDATE ====
     void Update()
     {
+        Debug.Log(range);
+        
         mouseLeftThisFrame = Mouse.current.leftButton.IsPressed(); //Get current mouse-press state
         crosshair.transform.position = mousePosition; //Set crosshair to mouse position
 

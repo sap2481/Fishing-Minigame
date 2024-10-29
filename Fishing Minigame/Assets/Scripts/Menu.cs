@@ -17,7 +17,6 @@ public class Menu : MonoBehaviour
     bool fishSelected;
 
     float maxSpeedStorage;
-    float rangeStorage;
 
     GameObject player;
 
@@ -50,8 +49,8 @@ public class Menu : MonoBehaviour
                 maxSpeedStorage = player.GetComponent<Player>().MaxSpeed;
                 player.GetComponent<Player>().MaxSpeed = 0;
 
-                rangeStorage = player.GetComponent<Fishing>().Range;
                 player.GetComponent<Fishing>().Range = 0;
+                Debug.Log("Range = " + player.GetComponent<Fishing>().Range);
             }
             else //If the menu is active, deactivate it
             {
@@ -60,7 +59,8 @@ public class Menu : MonoBehaviour
                 menuInstance = null;
 
                 player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
-                player.GetComponent<Fishing>().Range = rangeStorage;
+                player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage;
+                Debug.Log("Range = " + player.GetComponent<Fishing>().Range);
             }
         }
 
@@ -68,7 +68,7 @@ public class Menu : MonoBehaviour
         {
             //Fill Out Ship Information
             menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = "Boat Speed: " + maxSpeedStorage + " Knots";
-            menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = "Line Range: " + rangeStorage + " Clicks";
+            menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = "Line Range: " + player.GetComponent<Fishing>().RangeStorage + " Clicks";
 
             for (int i = 0; i < 6; i++) //Fill in cargo hold with fish
             {
@@ -106,6 +106,6 @@ public class Menu : MonoBehaviour
         menuInstance = null;
 
         player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
-        player.GetComponent<Fishing>().Range = rangeStorage;
+        player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage;
     }
 }

@@ -15,4 +15,16 @@ public class Collisions : MonoBehaviour
         }
         return false;
     }
+
+    public bool CheckMouseOverlap(Vector2 mousePos, GameObject obj)
+    {
+        if (mousePos.x < obj.GetComponent<SpriteRenderer>().bounds.max.x &&
+            mousePos.x > obj.GetComponent<SpriteRenderer>().bounds.min.x &&
+            mousePos.y < obj.GetComponent<SpriteRenderer>().bounds.max.y &&
+            mousePos.y > obj.GetComponent<SpriteRenderer>().bounds.min.y)
+        {
+            return true;
+        }
+        return false;
+    }
 }
