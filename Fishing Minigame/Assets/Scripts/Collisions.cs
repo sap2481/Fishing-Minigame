@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Collisions : MonoBehaviour
 {
-    /*public bool CheckCollision(GameObject obj1, GameObject obj2)
+    public bool CheckSpriteCollision(GameObject obj1, GameObject obj2)
     {
         if (obj1.GetComponent<SpriteRenderer>().bounds.min.x < obj2.GetComponent<SpriteRenderer>().bounds.max.x &&
             obj1.GetComponent<SpriteRenderer>().bounds.max.x > obj2.GetComponent<SpriteRenderer>().bounds.min.x &&
@@ -15,7 +15,7 @@ public class Collisions : MonoBehaviour
             return true;
         }
         return false;
-    }*/
+    }
 
     /*public bool CheckCollision(GameObject obj1, GameObject obj2)
     {
@@ -32,7 +32,7 @@ public class Collisions : MonoBehaviour
         return false;
     }*/ //This did not work
 
-    public bool CheckCollision(GameObject obj1, GameObject obj2) //THIS WORKS WAY BETTER YAY
+    public bool CheckColliderCollision(GameObject obj1, GameObject obj2) //THIS WORKS WAY BETTER YAY
     {
         BoxCollider2D collider1 = obj1.GetComponent<BoxCollider2D>();
         Vector2 colliderSize = new Vector2();

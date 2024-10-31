@@ -54,7 +54,7 @@ public class Environment : MonoBehaviour
             bool isNotColliding = false;
             while (!isNotColliding)
             {
-                if (collisions.CheckCollision(rocks[i], player))
+                if (collisions.CheckColliderCollision(rocks[i], player))
                 {
                     rocks[i].transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f));
                 }
@@ -102,7 +102,7 @@ public class Environment : MonoBehaviour
         //Check for Collisions with Rocks
         foreach (GameObject rock in rocks)
         {
-            if (collisions.CheckCollision(rock, player)) {
+            if (collisions.CheckColliderCollision(rock, player)) {
                 player.GetComponent<Player>().StartBounceback(rock);
             }
         }

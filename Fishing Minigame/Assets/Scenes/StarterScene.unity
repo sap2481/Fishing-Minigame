@@ -1359,6 +1359,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bloop: {fileID: -9158632467478222013, guid: c06cd66b2ae5ecd4aab6e1f9ed46484e, type: 3}
+  ping: {fileID: 8166777556428626639, guid: d9edc10b71383374599918ae562e0e29, type: 3}
+  success: {fileID: 8166777556428626639, guid: 73772bb2974285643ba151e459921b44, type: 3}
+  failure: {fileID: 8166777556428626639, guid: 4bd2a8b3d4e3e79469eb4b1d5d0b12cc, type: 3}
+  reel: {fileID: 8166777556428626639, guid: 9abd3c34bc89ef44ba4bd08c95f920cb, type: 3}
 --- !u!4 &2036975812
 Transform:
   m_ObjectHideFlags: 0

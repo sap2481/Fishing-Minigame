@@ -43,7 +43,7 @@ public class Outpost : MonoBehaviour
         mouseLeftThisFrame = Mouse.current.leftButton.IsPressed();
 
         //Check if the player is colliding with the outpost
-        if (collisions.CheckCollision(this.gameObject, player))
+        if (collisions.CheckColliderCollision(this.gameObject, player))
         {
             player.GetComponent<Player>().StartBounceback(this.gameObject);
         }

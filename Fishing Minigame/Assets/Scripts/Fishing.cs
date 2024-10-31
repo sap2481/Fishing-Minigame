@@ -173,7 +173,7 @@ public class Fishing : MonoBehaviour
                         float waitingTime = Random.Range(10f, 15f);
                         foreach (GameObject whirlpool in whirlpools)
                         {
-                            if (collisions.CheckCollision(whirlpool, bobber))
+                            if (collisions.CheckSpriteCollision(whirlpool, bobber))
                             {
                                 waitingTime = Random.Range(3.0f, 5.0f);
                                 break;
@@ -192,11 +192,12 @@ public class Fishing : MonoBehaviour
                         ringTotal = Random.Range(2, 5);
                         fishInProgress = new Fish(ringTotal);
                         ringCount = 1;
+                        soundMixer.PlayReel();
 
                         //Move Whirlpool If Applicable
                         foreach (GameObject whirlpool in whirlpools)
                         {
-                            if (collisions.CheckCollision(whirlpool, bobber))
+                            if (collisions.CheckSpriteCollision(whirlpool, bobber))
                             {
                                 whirlpool.transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30));
                                 break;
@@ -253,6 +254,7 @@ public class Fishing : MonoBehaviour
                     case (true, true, true, true):
                         
                         ringCount++;
+                        soundMixer.PlayPing();
 
                         //Measure rotation difference between target cone and moving cone
                         float thisDifference = Quaternion.Angle(movingCones[^1].transform.rotation, targetCones[^1].transform.rotation);
@@ -270,17 +272,20 @@ public class Fishing : MonoBehaviour
                             movingCones.Clear();
                             foreach (GameObject circle in circles) { Destroy(circle.gameObject); }
                             circles.Clear();
+                            soundMixer.StopReel();
 
                             //Determine a catch
                             if (rotationDifference < fishInProgress.DifficultyLevel) //this difficulty level will later be changed depending on the fish ur catching
                             {
                                 fishCaught++;
                                 fishList.Add(fishInProgress);
+                                soundMixer.PlaySuccess();
                                 Debug.Log(fishInProgress.Name + " Caught with Rotation Difference " + rotationDifference);
                             }
                             else
                             {
                                 fishFail = true;
+                                soundMixer.PlayFailure();
                                 Debug.Log("Failed to Catch " + fishInProgress.Name + " with Rotation Difference " + rotationDifference);
                             }
 
@@ -291,6 +296,9 @@ public class Fishing : MonoBehaviour
                         {
                             //Hide Last Target Cone
                             targetCones[^1].SetActive(false);
+
+                            //Play Sound Cue
+                            soundMixer.PlayPing();
 
                             //Measure how well a player did on the last ring, & change the color of the last moving cone to reflect it
                             if (thisDifference < 15) { movingCones[^1].GetComponent<SpriteRenderer>().color = Color.green; }
