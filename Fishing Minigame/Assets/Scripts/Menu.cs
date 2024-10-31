@@ -10,7 +10,7 @@ public class Menu : MonoBehaviour
 {
     //==== FIELDS ====
     [SerializeField] GameObject menuPrefab;
-    GameObject menuInstance;
+    public GameObject menuInstance;
     bool escKeyPressedLastFrame;
     bool escKeyPressedThisFrame;
     bool menuActive;
@@ -20,6 +20,8 @@ public class Menu : MonoBehaviour
     GameObject player;
 
     [SerializeField] Sprite tempFishSprite; //This is temporary functionality until each fish has their own sprite
+    [SerializeField] Collisions collisions;
+    Vector2 mousePosition;
     
     //==== START ====
     void Start()
@@ -35,6 +37,9 @@ public class Menu : MonoBehaviour
     void Update()
     {
         escKeyPressedThisFrame = Keyboard.current.escapeKey.isPressed;
+        //Get Mouse Position
+        mousePosition = Mouse.current.position.ReadValue();
+        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
 
         if (!escKeyPressedThisFrame && escKeyPressedLastFrame) //If the Escape key was just pressed...
         {
@@ -74,7 +79,7 @@ public class Menu : MonoBehaviour
             {
                 if (i < player.GetComponent<Fishing>().FishList.Count)
                 {
-                    menuInstance.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(i).GetComponent<Image>().sprite = tempFishSprite;
+                    menuInstance.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(i).GetComponent<Image>().sprite = player.GetComponent<Fishing>().FishList[i].Sprite;
                     menuInstance.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(i).GetChild(0).GetComponent<TMP_Text>().text = "Name: " + player.GetComponent<Fishing>().FishList[i].Name;
                     menuInstance.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(i).GetChild(1).GetComponent<TMP_Text>().text = "Value: $" + player.GetComponent<Fishing>().FishList[i].Value;
                 }

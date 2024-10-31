@@ -194,16 +194,6 @@ public class Fishing : MonoBehaviour
                         ringCount = 1;
                         soundMixer.PlayReel();
 
-                        //Move Whirlpool If Applicable
-                        foreach (GameObject whirlpool in whirlpools)
-                        {
-                            if (collisions.CheckSpriteCollision(whirlpool, bobber))
-                            {
-                                whirlpool.transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30));
-                                break;
-                            }
-                        }
-
                         //Instantiate Bullseye Center
                         circles.Add(Instantiate(circlePrefab));
                         circles[0].transform.position = bobber.transform.position;
@@ -264,6 +254,16 @@ public class Fishing : MonoBehaviour
                         {
                             lineCast = false;
                             fishOnTheLine = false;
+
+                            //Move Whirlpool If Applicable
+                            foreach (GameObject whirlpool in whirlpools)
+                            {
+                                if (collisions.CheckSpriteCollision(whirlpool, circles[0]))
+                                {
+                                    whirlpool.transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30));
+                                    break;
+                                }
+                            }
 
                             //Destroy All Mechanic Items
                             foreach (GameObject tCone in targetCones) { Destroy(tCone.gameObject); }
@@ -391,10 +391,10 @@ public class Fishing : MonoBehaviour
         }
 
         //Rotate Whirlpools
-        foreach (GameObject whirlpool in whirlpools)
+        /*foreach (GameObject whirlpool in whirlpools)
         {
             whirlpool.transform.eulerAngles += new Vector3(0f, 0f, whirlpoolRotSpeed * Time.deltaTime);
-        }
+        }*/
 
         mouseLeftLastFrame = mouseLeftThisFrame;
 

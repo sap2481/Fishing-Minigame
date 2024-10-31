@@ -22,13 +22,14 @@ public class Outpost : MonoBehaviour
     bool mouseLeftLastFrame;
 
     [SerializeField] Collisions collisions;
-    [SerializeField] Sprite tempFishSprite; //This is temporary functionality until each fish has their own sprite
+    Menu menu;
 
     //==== START ====
     void Start()
     {
         //Find Player
         player = GameObject.FindGameObjectWithTag("Player");
+        menu = GameObject.FindObjectOfType<Menu>();
 
         mouseLeftLastFrame = false;
         outpostActive = false;
@@ -53,7 +54,7 @@ public class Outpost : MonoBehaviour
             //Set range to zero so player can't cast on the outpost
             player.GetComponent<Fishing>().Range = 0;
 
-            if (mouseLeftLastFrame && !mouseLeftThisFrame && !outpostActive) //If the player clicked on the outpost, open the outpost menu
+            if (mouseLeftLastFrame && !mouseLeftThisFrame && !outpostActive && !menu.menuInstance) //If the player clicked on the outpost, open the outpost menu
             {
                 outpostActive = true;
                 player.GetComponent<Player>().Hull = 100; //Because the player docked at an outpost, reset health to full
@@ -98,19 +99,28 @@ public class Outpost : MonoBehaviour
 
         for (int i = 0; i < 6; i++)
         {
-            if (i < player.GetComponent<Fishing>().FishList.Count) //If there's a fish to go in the sell slot, set it to active & fill it with relevant info
-            {
-                Fish thisFish = player.GetComponent<Fishing>().FishList[i];
-
-                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).gameObject.SetActive(true);
-                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(0).GetComponent<TMP_Text>().text = thisFish.Name;
-                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(1).GetComponent<TMP_Text>().text = "$" + thisFish.Value;
-                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(2).GetComponent<Image>().sprite = /*thisFish.Sprite*/ tempFishSprite;
-                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(3).GetComponent<Button>().onClick.AddListener(delegate { SellTheFish(thisFish); });
-            }
-            else //If there is not a fish to go in the slot, set the slot to inactive
+            if (player.GetComponent<Fishing>().FishList.Count == 0)
             {
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).gameObject.SetActive(false);
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(6).gameObject.SetActive(true);
+            }
+            else
+            {
+                if (i < player.GetComponent<Fishing>().FishList.Count) //If there's a fish to go in the sell slot, set it to active & fill it with relevant info
+                {
+                    Fish thisFish = player.GetComponent<Fishing>().FishList[i];
+
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).gameObject.SetActive(true);
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(0).GetComponent<TMP_Text>().text = thisFish.Name;
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(1).GetComponent<TMP_Text>().text = "$" + thisFish.Value;
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(2).GetComponent<Image>().sprite = thisFish.Sprite;
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(3).GetComponent<Button>().onClick.AddListener(delegate { SellTheFish(thisFish); });
+                }
+                else //If there is not a fish to go in the slot, set the slot to inactive
+                {
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).gameObject.SetActive(false);
+                }
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(6).gameObject.SetActive(false);
             }
         }
     }

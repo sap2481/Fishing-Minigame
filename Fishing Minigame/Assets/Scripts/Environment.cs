@@ -17,7 +17,7 @@ public class Environment : MonoBehaviour
     [SerializeField] GameObject rockHolder;
 
     float x, y;
-    float sizeValue;
+    float sizeValueX, sizeValueY;
 
     [SerializeField] Collisions collisions;
     
@@ -28,10 +28,21 @@ public class Environment : MonoBehaviour
         rocks = new List<GameObject>();
         player = GameObject.FindGameObjectWithTag("Player");
         lastPlayerPos = Vector3.zero;
-        sizeValue = 3.8f;
 
-        x = sizeValue * 3;
-        y = sizeValue * 3;
+        //Get Tile Size
+        BoxCollider2D collider = oceanTile.GetComponent<BoxCollider2D>();
+        Vector2 colliderSize = new Vector2();
+        colliderSize.x = (oceanTile.GetComponent<SpriteRenderer>().sprite.bounds.size.x - (oceanTile.GetComponent<SpriteRenderer>().sprite.border.x + oceanTile.GetComponent<SpriteRenderer>().sprite.border.z)
+            / oceanTile.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit);
+        colliderSize.y = (oceanTile.GetComponent<SpriteRenderer>().sprite.bounds.size.y - (oceanTile.GetComponent<SpriteRenderer>().sprite.border.w + oceanTile.GetComponent<SpriteRenderer>().sprite.border.y)
+            / oceanTile.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit);
+        collider.size = colliderSize;
+
+        sizeValueX = collider.size.x;
+        sizeValueY = collider.size.y;
+
+        x = sizeValueX * 3;
+        y = sizeValueY * 3;
 
         //Create Initial Series of Tiles
         for (int i = 0; i < 7; i++)
@@ -39,10 +50,10 @@ public class Environment : MonoBehaviour
             for (int j = 0; j < 7; j++)
             {
                 tiles.Add(Instantiate(oceanTile, new Vector3(x, y, 0), Quaternion.identity, waterHolder.transform));
-                x -= sizeValue;
+                x -= sizeValueX;
             }
-            x = sizeValue * 3;
-            y -= sizeValue;
+            x = sizeValueX * 3;
+            y -= sizeValueY;
         }
 
         //Create Rocks
@@ -54,7 +65,7 @@ public class Environment : MonoBehaviour
             bool isNotColliding = false;
             while (!isNotColliding)
             {
-                if (collisions.CheckColliderCollision(rocks[i], player))
+                if (collisions.CheckSpriteCollision(rocks[i], player))
                 {
                     rocks[i].transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f));
                 }
@@ -73,28 +84,28 @@ public class Environment : MonoBehaviour
         foreach (GameObject tile in tiles)
         {
             float xDistance = Mathf.Abs(player.transform.position.x - tile.transform.position.x);
-            if (xDistance >= (sizeValue * 4))
+            if (xDistance >= (sizeValueX * 4 - 0.2f))
             {
                 if (player.transform.position.x > lastPlayerPos.x) //If the player is moving right, shift tiles to the right
                 {
-                    tile.transform.position = new Vector3(player.transform.position.x + (sizeValue * 3), tile.transform.position.y);
+                    tile.transform.position = new Vector3(player.transform.position.x + (sizeValueX * 3), tile.transform.position.y);
                 }
                 else //If the player is moving left, shift tiles to the left
                 {
-                    tile.transform.position = new Vector3(player.transform.position.x - (sizeValue * 3), tile.transform.position.y);
+                    tile.transform.position = new Vector3(player.transform.position.x - (sizeValueX * 3), tile.transform.position.y);
                 }
             }
 
             float yDistance = Mathf.Abs(player.transform.position.y - tile.transform.position.y);
-            if (yDistance >= (sizeValue * 4))
+            if (yDistance >= (sizeValueY * 4))
             {
                 if (player.transform.position.y > lastPlayerPos.y) //If the player is moving up, shift tiles up
                 {
-                    tile.transform.position = new Vector3(tile.transform.position.x, player.transform.position.y + (sizeValue * 3));
+                    tile.transform.position = new Vector3(tile.transform.position.x, player.transform.position.y + (sizeValueY * 3));
                 }
                 else //If the player is moving down, shift tiles down
                 {
-                    tile.transform.position = new Vector3(tile.transform.position.x, player.transform.position.y - (sizeValue * 3));
+                    tile.transform.position = new Vector3(tile.transform.position.x, player.transform.position.y - (sizeValueY * 3));
                 }
             }
         }
@@ -112,8 +123,8 @@ public class Environment : MonoBehaviour
             foreach (GameObject tile in tiles) { Destroy(tile); }
             tiles.Clear();
 
-            x = sizeValue * 3;
-            y = sizeValue * 3;
+            x = sizeValueX * 3;
+            y = sizeValueY * 3;
 
             //Create Initial Series of Tiles
             for (int i = 0; i < 7; i++)
@@ -121,10 +132,10 @@ public class Environment : MonoBehaviour
                 for (int j = 0; j < 7; j++)
                 {
                     tiles.Add(Instantiate(oceanTile, new Vector3(x, y, 0), Quaternion.identity, waterHolder.transform));
-                    x -= sizeValue;
+                    x -= sizeValueX;
                 }
-                x = sizeValue * 3;
-                y -= sizeValue;
+                x = sizeValueX * 3;
+                y -= sizeValueY;
             }
 
             player.GetComponent<Player>().ResetTiles = false;
