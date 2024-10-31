@@ -49,6 +49,20 @@ public class Environment : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             rocks.Add(Instantiate(rockPrefab, new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f)), Quaternion.identity, rockHolder.transform));
+
+            //Make sure rocks don't spawn over the player
+            bool isNotColliding = false;
+            while (!isNotColliding)
+            {
+                if (collisions.CheckCollision(rocks[i], player))
+                {
+                    rocks[i].transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f));
+                }
+                else
+                {
+                    isNotColliding = true;
+                }
+            }
         }
     }
 
@@ -90,7 +104,6 @@ public class Environment : MonoBehaviour
         {
             if (collisions.CheckCollision(rock, player)) {
                 player.GetComponent<Player>().StartBounceback(rock);
-                player.GetComponent<Player>().Hull -= 10;
             }
         }
 

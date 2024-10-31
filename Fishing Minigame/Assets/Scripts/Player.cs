@@ -242,7 +242,12 @@ public class Player : MonoBehaviour
     public void StartBounceback(GameObject collidingObj)
     {
         this.collidingObj = collidingObj;
+        if (!bounceback) { hull -= 10; }
         bounceback = true;
+        leftSpeed = 0f;
+        rightSpeed = 0f;
+        upSpeed = 0f;
+        downSpeed = 0f;
         StartCoroutine(BouncebackTimer(0.25f));
     }
 

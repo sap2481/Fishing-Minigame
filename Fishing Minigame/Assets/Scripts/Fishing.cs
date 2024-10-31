@@ -44,6 +44,9 @@ public class Fishing : MonoBehaviour
     //Collisions
     [SerializeField] Collisions collisions;
 
+    //Sound
+    [SerializeField] SoundMixer soundMixer;
+
     //Fish
     Fish fishInProgress;
     List<Fish> fishList;
@@ -176,6 +179,7 @@ public class Fishing : MonoBehaviour
                                 break;
                             }
                         }
+                        soundMixer.PlayBloop();
                         StartCoroutine(WaitForFish(waitingTime, numberOfCasts));
                         
                         break;

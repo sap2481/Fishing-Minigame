@@ -67,6 +67,8 @@ public class Menu : MonoBehaviour
             //Fill Out Ship Information
             menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = "Boat Speed: " + maxSpeedStorage + " Knots";
             menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = "Line Range: " + player.GetComponent<Fishing>().RangeStorage + " Clicks";
+            menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(2).GetComponent<TMP_Text>().text = "Hull: " + player.GetComponent<Player>().Hull + " / 100";
+            menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(3).GetComponent<TMP_Text>().text = "Money: $" + player.GetComponent<Player>().Money;
 
             for (int i = 0; i < 6; i++) //Fill in cargo hold with fish
             {
@@ -91,11 +93,10 @@ public class Menu : MonoBehaviour
     //==== METHODS & COROUTINES ====
     void ResetClicked()
     {
-        Debug.Log("Game Reset.");
-
         player.GetComponent<Player>().ResetTiles = true;
         player.GetComponent<Player>().Position = new Vector3(0, 0, 0);
         player.GetComponent<Player>().Hull = 100;
+        player.GetComponent<Player>().Money = 0;
         player.GetComponent<Fishing>().FishCaught = 0;
         player.GetComponent<Fishing>().FishList.Clear();
 
@@ -105,5 +106,7 @@ public class Menu : MonoBehaviour
 
         player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
         player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage;
+
+        Debug.Log("Game Reset.");
     }
 }

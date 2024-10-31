@@ -22,6 +22,7 @@ public class Outpost : MonoBehaviour
     bool mouseLeftLastFrame;
 
     [SerializeField] Collisions collisions;
+    [SerializeField] Sprite tempFishSprite; //This is temporary functionality until each fish has their own sprite
 
     //==== START ====
     void Start()
@@ -41,6 +42,12 @@ public class Outpost : MonoBehaviour
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
         mouseLeftThisFrame = Mouse.current.leftButton.IsPressed();
 
+        //Check if the player is colliding with the outpost
+        if (collisions.CheckCollision(this.gameObject, player))
+        {
+            player.GetComponent<Player>().StartBounceback(this.gameObject);
+        }
+
         if (collisions.CheckMouseOverlap(mousePosition, this.gameObject) || outpostActive) //If the mouse is overlapping with the outpost...
         {
             //Set range to zero so player can't cast on the outpost
@@ -49,11 +56,13 @@ public class Outpost : MonoBehaviour
             if (mouseLeftLastFrame && !mouseLeftThisFrame && !outpostActive) //If the player clicked on the outpost, open the outpost menu
             {
                 outpostActive = true;
+                player.GetComponent<Player>().Hull = 100; //Because the player docked at an outpost, reset health to full
                 opMenuInstance = Instantiate(opMenuPrefab);
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Button>().onClick.AddListener(xOut);
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<Button>().onClick.AddListener(BuyButton);
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(2).GetComponent<Button>().onClick.AddListener(SellButton);
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(3).GetComponent<Button>().onClick.AddListener(QuestButton);
+                SellButton();
             }
         }
         else
@@ -76,10 +85,17 @@ public class Outpost : MonoBehaviour
     public void BuyButton() //Change the menu to the Buy screen
     {
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).gameObject.SetActive(false); //Set Sell panel to inactive
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).gameObject.SetActive(true); //Set Buy panel to active <--
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).gameObject.SetActive(false); //Set Quest panel to inactive
+
+
     }
     public void SellButton() //Change the menu to the Sell screen
     {
-        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).gameObject.SetActive(true); //Set Sell panel to active
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).gameObject.SetActive(true); //Set Sell panel to active <--
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).gameObject.SetActive(false); //Set Buy panel to inactive
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).gameObject.SetActive(false); //Set Quest panel to inactive
+
         for (int i = 0; i < 6; i++)
         {
             if (i < player.GetComponent<Fishing>().FishList.Count) //If there's a fish to go in the sell slot, set it to active & fill it with relevant info
@@ -89,7 +105,7 @@ public class Outpost : MonoBehaviour
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).gameObject.SetActive(true);
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(0).GetComponent<TMP_Text>().text = thisFish.Name;
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(1).GetComponent<TMP_Text>().text = "$" + thisFish.Value;
-                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(2).GetComponent<Image>().sprite = thisFish.Sprite;
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(2).GetComponent<Image>().sprite = /*thisFish.Sprite*/ tempFishSprite;
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(3).GetComponent<Button>().onClick.AddListener(delegate { SellTheFish(thisFish); });
             }
             else //If there is not a fish to go in the slot, set the slot to inactive
@@ -101,6 +117,8 @@ public class Outpost : MonoBehaviour
     public void QuestButton()
     {
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).gameObject.SetActive(false); //Set Sell panel to inactive
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).gameObject.SetActive(false); //Set Buy panel to inactive
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).gameObject.SetActive(true); //Set Quest panel to active <--
     }
 
     public void SellTheFish(Fish fish)
