@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     bool bounceback = false;
     GameObject collidingObj;
     float hull = 100f; //Health
+    float maxHull = 100f;
     bool sinking = false; //When the player reaches 0 hull, the boat sinks & the player resets
     bool resetTiles; //Tells the environment to reset the tiles properly
 
@@ -38,9 +39,10 @@ public class Player : MonoBehaviour
     public Vector3 Direction { get { return direction; } }
     public Vector3 Velocity { get { return velocity; } }
     public float MaxSpeed { get { return maxSpeed; } set { maxSpeed = value; } }
-    public float Acceleration { get { return accel; } }
+    public float Acceleration { get { return accel; } set { accel = value; } }
     public bool Bounceback { get { return bounceback; } set { bounceback = value; } }
     public float Hull { get { return hull; } set { hull = value; } }
+    public float MaxHull { get { return maxHull; } set { maxHull = value; } }
     public bool ResetTiles { get { return resetTiles; } set { resetTiles = value; } }
     public float Money { get { return money; } set { money = value; } }
 

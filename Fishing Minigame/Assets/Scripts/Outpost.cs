@@ -11,7 +11,7 @@ public class Outpost : MonoBehaviour
     //==== FIELDS ====
     [SerializeField] GameObject opMenuPrefab;
     GameObject opMenuInstance;
-    bool outpostActive;
+    public bool outpostActive;
 
     GameObject player;
     float maxSpeedStorage;
@@ -24,6 +24,15 @@ public class Outpost : MonoBehaviour
     [SerializeField] Collisions collisions;
     Menu menu;
 
+    float speedUpgradeCost;
+    float originalSpeed;
+    float rangeUpgradeCost;
+    float originalRange;
+    float hullUpgradeCost;
+    float originalHull;
+
+    bool canClick; //A bool to ensure that one button at a time is ever in progress
+
     //==== START ====
     void Start()
     {
@@ -33,6 +42,12 @@ public class Outpost : MonoBehaviour
 
         mouseLeftLastFrame = false;
         outpostActive = false;
+
+        originalSpeed = 5;
+        originalRange = 4;
+        originalHull = 100;
+
+        canClick = true;
     }
 
     //==== UPDATE ====
@@ -72,6 +87,9 @@ public class Outpost : MonoBehaviour
             player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage;
         }
 
+        //Update Money the Player Has
+        if (outpostActive) { opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(9).GetComponent<TMP_Text>().text = "Money: $" + player.GetComponent<Player>().Money; }
+
         mouseLeftLastFrame = mouseLeftThisFrame;
     }
 
@@ -89,7 +107,49 @@ public class Outpost : MonoBehaviour
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).gameObject.SetActive(true); //Set Buy panel to active <--
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).gameObject.SetActive(false); //Set Quest panel to inactive
 
+        //Calculate Upgrade Costs
+        speedUpgradeCost = 200 + ((player.GetComponent<Player>().MaxSpeed - originalSpeed) * 200);
+        rangeUpgradeCost = 300 + ((player.GetComponent<Fishing>().RangeStorage - originalRange) * 250);
+        hullUpgradeCost = 400 + ((player.GetComponent<Player>().Hull - originalHull) * 6);
 
+        //Fill Out Costs
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(1).GetChild(1).GetComponent<TMP_Text>().text = "Cost: $" + speedUpgradeCost;
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(2).GetChild(1).GetComponent<TMP_Text>().text = "Cost: $" + rangeUpgradeCost;
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(1).GetComponent<TMP_Text>().text = "Cost: $" + hullUpgradeCost;
+
+        //If the player has enough money for each upgrade, add a listener to the respective upgrade's button
+        if (player.GetComponent<Player>().Money >= speedUpgradeCost)
+        {
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(1).GetChild(2).GetComponent<Image>().color = Color.green;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(1).GetChild(2).GetComponent<Button>().onClick.AddListener(delegate { UpgradeSpeed(speedUpgradeCost); });
+        }
+        else
+        {
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(1).GetChild(2).GetComponent<Image>().color = Color.red;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(1).GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
+        }
+
+        if (player.GetComponent<Player>().Money >= rangeUpgradeCost)
+        {
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(2).GetChild(2).GetComponent<Image>().color = Color.green;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(2).GetChild(2).GetComponent<Button>().onClick.AddListener(delegate { UpgradeRange(rangeUpgradeCost); });
+        }
+        else
+        {
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(2).GetChild(2).GetComponent<Image>().color = Color.red;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(2).GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
+        }
+
+        if (player.GetComponent<Player>().Money >= hullUpgradeCost)
+        {
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetComponent<Image>().color = Color.green;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetComponent<Button>().onClick.AddListener(delegate { UpgradeHull(hullUpgradeCost); });
+        }
+        else
+        {
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetComponent<Image>().color = Color.red;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
+        }
     }
     public void SellButton() //Change the menu to the Sell screen
     {
@@ -99,7 +159,7 @@ public class Outpost : MonoBehaviour
 
         for (int i = 0; i < 6; i++)
         {
-            if (player.GetComponent<Fishing>().FishList.Count == 0)
+            if (player.GetComponent<Fishing>().FishList.Count == 0) //If there are no fish to sell, display the Empty Cargo Hold message
             {
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).gameObject.SetActive(false);
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(6).gameObject.SetActive(true);
@@ -119,8 +179,9 @@ public class Outpost : MonoBehaviour
                 else //If there is not a fish to go in the slot, set the slot to inactive
                 {
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).gameObject.SetActive(false);
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(3).GetComponent<Button>().onClick.RemoveAllListeners();
                 }
-                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(6).gameObject.SetActive(false);
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(6).gameObject.SetActive(false); //Set Empty Cargo Hold message to inactive
             }
         }
     }
@@ -133,9 +194,51 @@ public class Outpost : MonoBehaviour
 
     public void SellTheFish(Fish fish)
     {
-        player.GetComponent<Player>().Money += fish.Value;
-        Debug.Log("Player Money: $" + player.GetComponent<Player>().Money);
-        player.GetComponent<Fishing>().FishList.Remove(fish);
-        SellButton();
+        if (canClick)
+        {
+            player.GetComponent<Player>().Money += fish.Value;
+            Debug.Log("Player Money: $" + player.GetComponent<Player>().Money);
+            player.GetComponent<Fishing>().FishList.Remove(fish);
+            SellButton();
+            StartCoroutine(WaitForButtonClick(0.25f));
+        }
     }
+
+    public void UpgradeSpeed(float cost)
+    {
+        if (canClick)
+        {
+            player.GetComponent<Player>().MaxSpeed++;
+            player.GetComponent<Player>().Money -= cost;
+            BuyButton();
+            StartCoroutine(WaitForButtonClick(0.25f));
+        }
+    }
+    public void UpgradeRange(float cost)
+    {
+        if (canClick)
+        {
+            player.GetComponent<Fishing>().RangeStorage++;
+            player.GetComponent<Player>().Money -= cost;
+            BuyButton();
+            StartCoroutine(WaitForButtonClick(0.25f));
+        }
+    }
+    public void UpgradeHull(float cost)
+    {
+        if (canClick)
+        {
+            player.GetComponent<Player>().Hull += 50;
+            player.GetComponent<Player>().MaxHull += 50;
+            player.GetComponent<Player>().Money -= cost;
+            BuyButton();
+            StartCoroutine(WaitForButtonClick(0.25f));
+        }
+    }
+    private IEnumerator WaitForButtonClick(float waitTime)
+    {
+        canClick = false;
+        yield return new WaitForSeconds(waitTime);
+        canClick = true;
+    } 
 }

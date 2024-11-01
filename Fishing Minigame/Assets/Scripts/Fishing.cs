@@ -278,7 +278,7 @@ public class Fishing : MonoBehaviour
                             if (rotationDifference < fishInProgress.DifficultyLevel) //this difficulty level will later be changed depending on the fish ur catching
                             {
                                 fishCaught++;
-                                fishList.Add(fishInProgress);
+                                if (fishList.Count < 6) { fishList.Add(fishInProgress); }
                                 soundMixer.PlaySuccess();
                                 Debug.Log(fishInProgress.Name + " Caught with Rotation Difference " + rotationDifference);
                             }

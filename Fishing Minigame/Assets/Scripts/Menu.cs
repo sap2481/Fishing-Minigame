@@ -18,6 +18,7 @@ public class Menu : MonoBehaviour
     float maxSpeedStorage;
 
     GameObject player;
+    Outpost outpost;
 
     [SerializeField] Sprite tempFishSprite; //This is temporary functionality until each fish has their own sprite
     [SerializeField] Collisions collisions;
@@ -31,6 +32,7 @@ public class Menu : MonoBehaviour
         menuActive = false;
 
         player = GameObject.FindGameObjectWithTag("Player");
+        outpost = GameObject.FindObjectOfType<Outpost>();
     }
 
     //==== UPDATE ====
@@ -43,7 +45,7 @@ public class Menu : MonoBehaviour
 
         if (!escKeyPressedThisFrame && escKeyPressedLastFrame) //If the Escape key was just pressed...
         {
-            if (!menuActive) //If the menu is not active, activate it
+            if (!menuActive && !outpost.outpostActive) //If the menu is not active, activate it
             {
                 menuActive = true;
                 menuInstance = Instantiate(menuPrefab);
@@ -55,7 +57,7 @@ public class Menu : MonoBehaviour
                 player.GetComponent<Fishing>().Range = 0;
                 Debug.Log("Range = " + player.GetComponent<Fishing>().Range);
             }
-            else //If the menu is active, deactivate it
+            else if (menuActive) //If the menu is active, deactivate it
             {
                 menuActive = false;
                 Destroy(menuInstance.gameObject);
@@ -72,7 +74,7 @@ public class Menu : MonoBehaviour
             //Fill Out Ship Information
             menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = "Boat Speed: " + maxSpeedStorage + " Knots";
             menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = "Line Range: " + player.GetComponent<Fishing>().RangeStorage + " Clicks";
-            menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(2).GetComponent<TMP_Text>().text = "Hull: " + player.GetComponent<Player>().Hull + " / 100";
+            menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(2).GetComponent<TMP_Text>().text = "Hull: " + player.GetComponent<Player>().Hull + " / " + player.GetComponent<Player>().MaxHull;
             menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(3).GetComponent<TMP_Text>().text = "Money: $" + player.GetComponent<Player>().Money;
 
             for (int i = 0; i < 6; i++) //Fill in cargo hold with fish
