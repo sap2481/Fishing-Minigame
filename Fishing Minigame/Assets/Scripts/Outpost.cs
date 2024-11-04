@@ -174,7 +174,8 @@ public class Outpost : MonoBehaviour
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(0).GetComponent<TMP_Text>().text = thisFish.Name;
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(1).GetComponent<TMP_Text>().text = "$" + thisFish.Value;
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(2).GetComponent<Image>().sprite = thisFish.Sprite;
-                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(3).GetComponent<Button>().onClick.AddListener(delegate { SellTheFish(thisFish); });
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(3).GetComponent<Button>().onClick.AddListener
+                        (delegate { SellTheFish(player.GetComponent<Fishing>().FishList, player.GetComponent<Fishing>().FishList.FindIndex(a => a.Value == thisFish.Value)); });
                 }
                 else //If there is not a fish to go in the slot, set the slot to inactive
                 {
@@ -192,13 +193,14 @@ public class Outpost : MonoBehaviour
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).gameObject.SetActive(true); //Set Quest panel to active <--
     }
 
-    public void SellTheFish(Fish fish)
+    public void SellTheFish(List<Fish> fishList, int index)
     {
         if (canClick)
         {
-            player.GetComponent<Player>().Money += fish.Value;
-            Debug.Log("Player Money: $" + player.GetComponent<Player>().Money);
-            player.GetComponent<Fishing>().FishList.Remove(fish);
+            if (index == -1) { index = 0; }
+            player.GetComponent<Player>().Money += fishList[index].Value;
+            Debug.Log("I just sold " + fishList[index].Name + " for " + fishList[index].Value);
+            player.GetComponent<Fishing>().FishList.RemoveAt(index);
             SellButton();
             StartCoroutine(WaitForButtonClick(0.25f));
         }

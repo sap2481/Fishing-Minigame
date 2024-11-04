@@ -42,12 +42,12 @@ public class SoundMixer : MonoBehaviour
         ping.Play();
         Debug.Log("Ping Played");
     }
-    public void PlaySuccess() //Cannot play a disabled audio source error
+    public void PlaySuccess()
     {
         success.Play();
         Debug.Log("Success played");
     }
-    public void PlayFailure() //Cannot play a disabled audio source error
+    public void PlayFailure()
     {
         failure.Play();
         Debug.Log("Failure played");
