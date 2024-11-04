@@ -67,7 +67,7 @@ public class Outpost : MonoBehaviour
         if (collisions.CheckMouseOverlap(mousePosition, this.gameObject) || outpostActive) //If the mouse is overlapping with the outpost...
         {
             //Set range to zero so player can't cast on the outpost
-            player.GetComponent<Fishing>().Range = 0;
+            if (player.GetComponent<Fishing>() != null) { player.GetComponent<Fishing>().Range = 0; }
 
             if (mouseLeftLastFrame && !mouseLeftThisFrame && !outpostActive && !menu.menuInstance) //If the player clicked on the outpost, open the outpost menu
             {
@@ -84,7 +84,7 @@ public class Outpost : MonoBehaviour
         else
         {
             //Reset fishing range
-            player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage;
+            if (player.GetComponent<Fishing>() != null) { player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage; ; }
         }
 
         //Update Money the Player Has

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 //As of now, this script is planned to be attached to the player.
 
@@ -18,10 +19,10 @@ public class Fishing : MonoBehaviour
 
     //Prefabs & Related GameObjects
     [SerializeField] GameObject crosshairPrefab;
-    GameObject crosshair;
-    GameObject bobber; //Crosshair but a different color, used when the player has cast their line
+    public GameObject crosshair;
+    public GameObject bobber; //Crosshair but a different color, used when the player has cast their line
     [SerializeField] GameObject notificationPrefab;
-    GameObject notification;
+    public GameObject notification;
     [SerializeField] GameObject circlePrefab;
     [SerializeField] GameObject whirlpoolPrefab;
     List<GameObject> whirlpools;
@@ -52,15 +53,17 @@ public class Fishing : MonoBehaviour
     List<Fish> fishList;
 
     //Other Values
-    bool lineCast; //Is the line cast?
+    public bool lineCast; //Is the line cast?
     int fishCaught; //Did the player catch a fish?
-    int numberOfCasts; //Make sure that each cast is independent of each other cast (aka make sure that the timing of a previous cast doesn't carry over to the next)
-    bool fishOnTheLine; //Is a fish on the line?
+    public int numberOfCasts; //Make sure that each cast is independent of each other cast (aka make sure that the timing of a previous cast doesn't carry over to the next)
+    public bool fishOnTheLine; //Is a fish on the line?
     float range; //The range at which a player can cast their line away from their ship
     float rangeStorage; //Range gets changed around a bunch, so I need a property that maintains the current range value
     float distance; //How far is the player attempting to cast?
     bool fishFail; //Declare if the player failed to catch a fish (used for the CatchTracker)
     float whirlpoolRotSpeed; //How fast the whirlpools rotate
+
+    Tutorial tutorial;
 
     //First-Pass Mechanic Related Fields (DEPRECATED)
     //float circleScale; //The scale of the target circle
@@ -92,6 +95,9 @@ public class Fishing : MonoBehaviour
         //Find Player
         player = GameObject.FindGameObjectWithTag("Player");
 
+        //Find Tutorial, if applicable
+        tutorial = GameObject.FindObjectOfType<Tutorial>();
+
         //Instantiate Lists
         targetCones = new List<GameObject>();
         movingCones = new List<GameObject>();
@@ -100,9 +106,16 @@ public class Fishing : MonoBehaviour
         whirlpools = new List<GameObject>();
 
         //Instantiate Whirlpools
-        for (int i = 0; i < 10; i++)
+        if (SceneManager.GetActiveScene().name != "TutorialScene")
         {
-            whirlpools.Add(Instantiate(whirlpoolPrefab, new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f)), Quaternion.identity, whirlpoolHolder.transform));
+            for (int i = 0; i < 10; i++)
+            {
+                whirlpools.Add(Instantiate(whirlpoolPrefab, new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f)), Quaternion.identity, whirlpoolHolder.transform));
+            }
+        }
+        else
+        {
+            whirlpools.Add(Instantiate(whirlpoolPrefab, new Vector3(0, 3), Quaternion.identity, whirlpoolHolder.transform));
         }
 
         //Initialize Other Values
@@ -180,7 +193,7 @@ public class Fishing : MonoBehaviour
                             }
                         }
                         soundMixer.PlayBloop();
-                        StartCoroutine(WaitForFish(waitingTime, numberOfCasts));
+                        if (SceneManager.GetActiveScene().name != "TutorialScene") { StartCoroutine(WaitForFish(waitingTime, numberOfCasts)); }
                         
                         break;
                     
@@ -189,7 +202,8 @@ public class Fishing : MonoBehaviour
                     case (true, false, false, false):
                         
                         fishOnTheLine = true;
-                        ringTotal = Random.Range(2, 5);
+                        if (SceneManager.GetActiveScene().name == "TutorialScene") { ringTotal = 2; }
+                        else { ringTotal = Random.Range(2, 5); }
                         fishInProgress = new Fish(ringTotal);
                         ringCount = 1;
                         soundMixer.PlayReel();
@@ -258,7 +272,7 @@ public class Fishing : MonoBehaviour
                             //Move Whirlpool If Applicable
                             foreach (GameObject whirlpool in whirlpools)
                             {
-                                if (collisions.CheckSpriteCollision(whirlpool, circles[0]))
+                                if (collisions.CheckSpriteCollision(whirlpool, circles[0]) && tutorial != null)
                                 {
                                     whirlpool.transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30));
                                     break;
@@ -342,9 +356,12 @@ public class Fishing : MonoBehaviour
                     //(The player is reeling in their line without a fish)
                     case (true, false, true, false):
 
-                        Destroy(bobber.gameObject);
-                        bobber = null;
-                        lineCast = false;
+                        if (tutorial != null && tutorial.increment != 4)
+                        {
+                            Destroy(bobber.gameObject);
+                            bobber = null;
+                            lineCast = false;
+                        }
 
                         break;
 
@@ -545,7 +562,7 @@ public class Fishing : MonoBehaviour
     }
 
     //==== METHODS & COROUTINES ====
-    private IEnumerator WaitForFish(float waitTime, int currentCastNum)
+    public IEnumerator WaitForFish(float waitTime, int currentCastNum)
     {
         yield return new WaitForSeconds(waitTime);
         if (lineCast && currentCastNum == numberOfCasts) //If the line is still cast after the wait time has passed, and is still on the current cast...

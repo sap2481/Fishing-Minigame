@@ -54,8 +54,8 @@ public class Menu : MonoBehaviour
                 maxSpeedStorage = player.GetComponent<Player>().MaxSpeed;
                 player.GetComponent<Player>().MaxSpeed = 0;
 
-                player.GetComponent<Fishing>().Range = 0;
-                Debug.Log("Range = " + player.GetComponent<Fishing>().Range);
+                //player.GetComponent<Fishing>().Range = 0;
+                //Debug.Log("Range = " + player.GetComponent<Fishing>().Range);
             }
             else if (menuActive) //If the menu is active, deactivate it
             {
@@ -64,10 +64,13 @@ public class Menu : MonoBehaviour
                 menuInstance = null;
 
                 player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
-                player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage;
-                Debug.Log("Range = " + player.GetComponent<Fishing>().Range);
+                //player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage;
+                //Debug.Log("Range = " + player.GetComponent<Fishing>().Range);
             }
         }
+
+        if (menuActive) { player.GetComponent<Fishing>().Range = 0; }
+        else { player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage; }
 
         if (menuInstance != null)
         {

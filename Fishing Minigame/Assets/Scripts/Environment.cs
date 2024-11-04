@@ -20,6 +20,8 @@ public class Environment : MonoBehaviour
     float sizeValueX, sizeValueY;
 
     [SerializeField] Collisions collisions;
+
+    Outpost outpost;
     
     //==== START ====
     void Start()
@@ -28,6 +30,7 @@ public class Environment : MonoBehaviour
         rocks = new List<GameObject>();
         player = GameObject.FindGameObjectWithTag("Player");
         lastPlayerPos = Vector3.zero;
+        outpost = GameObject.FindObjectOfType<Outpost>();
 
         //Get Tile Size
         BoxCollider2D collider = oceanTile.GetComponent<BoxCollider2D>();
@@ -61,11 +64,11 @@ public class Environment : MonoBehaviour
         {
             rocks.Add(Instantiate(rockPrefab, new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f)), Quaternion.identity, rockHolder.transform));
 
-            //Make sure rocks don't spawn over the player
+            //Make sure rocks don't spawn over the player or the outpost
             bool isNotColliding = false;
             while (!isNotColliding)
             {
-                if (collisions.CheckSpriteCollision(rocks[i], player))
+                if (collisions.CheckSpriteCollision(rocks[i], player) || collisions.CheckSpriteCollision(rocks[i], outpost.gameObject))
                 {
                     rocks[i].transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f));
                 }
