@@ -272,7 +272,7 @@ public class Fishing : MonoBehaviour
                             //Move Whirlpool If Applicable
                             foreach (GameObject whirlpool in whirlpools)
                             {
-                                if (collisions.CheckSpriteCollision(whirlpool, circles[0]) && tutorial != null)
+                                if (collisions.CheckSpriteCollision(whirlpool, circles[0]) && SceneManager.GetActiveScene().name != "TutorialScene")
                                 {
                                     whirlpool.transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30));
                                     break;
