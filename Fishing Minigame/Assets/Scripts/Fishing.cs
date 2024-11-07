@@ -193,7 +193,7 @@ public class Fishing : MonoBehaviour
                             }
                         }
                         soundMixer.PlayBloop();
-                        if (tutorial == null || (tutorial != null && tutorial.increment == 5)) { StartCoroutine(WaitForFish(waitingTime, numberOfCasts)); }
+                        if (tutorial == null || (tutorial != null && (tutorial.increment == 5 || tutorial.increment == 12))) { StartCoroutine(WaitForFish(waitingTime, numberOfCasts)); }
                         
                         break;
                     

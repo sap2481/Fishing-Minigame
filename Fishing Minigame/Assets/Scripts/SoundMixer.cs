@@ -21,19 +21,19 @@ public class SoundMixer : MonoBehaviour
     //==== Start ====
     void Start()
     {
-        bloop = Instantiate(bloopPrefab, this).GetComponent<AudioSource>();
+        bloop = Instantiate(bloopPrefab, this.transform).GetComponent<AudioSource>();
         bloop.enabled = true;
 
-        ping = Instantiate(pingPrefab, this).GetComponent<AudioSource>(); ;
+        ping = Instantiate(pingPrefab, this.transform).GetComponent<AudioSource>();
         ping.enabled = true;
 
-        success = Instantiate(successPrefab, this).GetComponent<AudioSource>(); ;
+        success = Instantiate(successPrefab, this.transform).GetComponent<AudioSource>();
         success.enabled = true;
 
-        failure = Instantiate(failurePrefab, this).GetComponent<AudioSource>(); ;
+        failure = Instantiate(failurePrefab, this.transform).GetComponent<AudioSource>();
         failure.enabled = true;
 
-        reel = Instantiate(reelPrefab, this).GetComponent<AudioSource>(); ;
+        reel = Instantiate(reelPrefab, this.transform).GetComponent<AudioSource>();
         reel.enabled = true;
     }
 

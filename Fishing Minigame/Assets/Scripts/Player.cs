@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -33,6 +34,8 @@ public class Player : MonoBehaviour
     float camWidth;
 
     float money;
+
+    Scene tutorial;
 
     //==== PROPERTIES ====
     public Vector3 Position { get { return position; } set { position = value; } }
@@ -217,7 +220,6 @@ public class Player : MonoBehaviour
                 hull = 100;
                 money = 0;
                 sinking = false;
-                resetTiles = true;
             }
         }
     }

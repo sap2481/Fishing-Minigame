@@ -50,8 +50,8 @@ public class Tutorial : MonoBehaviour
         mouseLeftThisFrame = Mouse.current.leftButton.IsPressed();
         if (canClick && !mouseLeftThisFrame && mouseLeftLastFrame) //If a single click was just completed, change the dialogue
         {
-            if (increment == 9) { increment = 11; }
-            else if (increment == 11) { increment = 5; }
+            if (increment == 10) { increment = 12; }
+            else if (increment == 12) { increment = 6; }
             else { increment++; }
             StartCoroutine(WaitToClick(0.5f));
         }
@@ -93,7 +93,7 @@ public class Tutorial : MonoBehaviour
             case 6:
                 waitForFishStarted = false;
                 numCastsIncremented = false;
-                if (player.GetComponent<Fishing>().crosshair.active == true) { increment = 10; } //Jump to increment 9 if the player screws up getting a fish on the line
+                if (player.GetComponent<Fishing>().crosshair.active == true) { increment = 10; } //Jump to increment 10 if the player screws up getting a fish on the line
                 textBox.text = "Good! Now, You see that blue area there? Try to click when the moving white bar is overlapping with that blue one. A lot of clicking, I know.";
                 break;
 
@@ -102,7 +102,7 @@ public class Tutorial : MonoBehaviour
                 break;
 
             case 8:
-                if (player.GetComponent<Fishing>().FishFail) { increment = 11; } //if the player fails to catch a fish, jump to increment 10.
+                if (player.GetComponent<Fishing>().FishFail) { increment = 11; } //if the player fails to catch a fish, jump to increment 11.
                 textBox.text = "Good job! You caught a fish! That's pretty much the entire game. Good luck, have fun, come see me if you need anything. It's not like I'm physically capable of going anywhere.";
                 break;
 
@@ -125,12 +125,12 @@ public class Tutorial : MonoBehaviour
             case 12:
                 //This plays after either case 10 or 11
                 textBox.text = "This dialogue is gonna keep looping, you know. You're not unlocking anything new by failing. Except this, I suppose. Whoop-dee-doo.";
-                if (!numCastsIncremented) { 
+                /*if (!numCastsIncremented) { 
                     player.GetComponent<Fishing>().numberOfCasts++; 
                     Debug.Log(player.GetComponent<Fishing>().numberOfCasts);  
                     numCastsIncremented = true; 
                 }
-                if (!waitForFishStarted) { StartCoroutine(player.GetComponent<Fishing>().WaitForFish(Random.Range(3.0f, 5.0f), player.GetComponent<Fishing>().numberOfCasts)); waitForFishStarted = true; }
+                if (!waitForFishStarted) { StartCoroutine(player.GetComponent<Fishing>().WaitForFish(Random.Range(3.0f, 5.0f), player.GetComponent<Fishing>().numberOfCasts)); waitForFishStarted = true; }*/
                 break;
 
             default:

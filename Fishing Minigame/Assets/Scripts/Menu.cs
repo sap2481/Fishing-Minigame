@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
@@ -116,6 +117,8 @@ public class Menu : MonoBehaviour
 
         player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
         player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage;
+
+        SceneManager.LoadScene("TutorialScene");
 
         Debug.Log("Game Reset.");
     }
