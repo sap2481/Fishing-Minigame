@@ -215,6 +215,7 @@ public class Player : MonoBehaviour
                 this.transform.localScale = new Vector3(0.5f, 0.5f);
                 position = new Vector3(0, 0, 0);
                 hull = 100;
+                money = 0;
                 sinking = false;
                 resetTiles = true;
             }

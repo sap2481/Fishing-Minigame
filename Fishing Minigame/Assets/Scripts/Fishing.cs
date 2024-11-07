@@ -193,7 +193,7 @@ public class Fishing : MonoBehaviour
                             }
                         }
                         soundMixer.PlayBloop();
-                        if (SceneManager.GetActiveScene().name != "TutorialScene") { StartCoroutine(WaitForFish(waitingTime, numberOfCasts)); }
+                        if (tutorial == null || (tutorial != null && tutorial.increment == 5)) { StartCoroutine(WaitForFish(waitingTime, numberOfCasts)); }
                         
                         break;
                     
@@ -355,13 +355,10 @@ public class Fishing : MonoBehaviour
                     //Line is cast, there is a bobber, there is no notification, and there is no fish on the line
                     //(The player is reeling in their line without a fish)
                     case (true, false, true, false):
-
-                        if (tutorial != null && tutorial.increment != 4)
-                        {
-                            Destroy(bobber.gameObject);
-                            bobber = null;
-                            lineCast = false;
-                        }
+                        
+                        Destroy(bobber.gameObject);
+                        bobber = null;
+                        lineCast = false;
 
                         break;
 

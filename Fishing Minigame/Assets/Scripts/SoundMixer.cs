@@ -6,28 +6,34 @@ using UnityEngine.Audio;
 public class SoundMixer : MonoBehaviour
 {
     //==== FIELDS ====
-    [SerializeField] AudioSource bloop;
-    [SerializeField] AudioSource ping;
-    [SerializeField] AudioSource success;
-    [SerializeField] AudioSource failure;
-    [SerializeField] AudioSource reel;
+    [SerializeField] GameObject bloopPrefab;
+    [SerializeField] GameObject pingPrefab;
+    [SerializeField] GameObject successPrefab;
+    [SerializeField] GameObject failurePrefab;
+    [SerializeField] GameObject reelPrefab;
+
+    AudioSource bloop;
+    AudioSource ping;
+    AudioSource success;
+    AudioSource failure;
+    AudioSource reel;
 
     //==== Start ====
     void Start()
     {
-        bloop = GetComponent<AudioSource>();
+        bloop = Instantiate(bloopPrefab, this).GetComponent<AudioSource>();
         bloop.enabled = true;
 
-        ping = GetComponent<AudioSource>();
+        ping = Instantiate(pingPrefab, this).GetComponent<AudioSource>(); ;
         ping.enabled = true;
 
-        success = GetComponent<AudioSource>();
+        success = Instantiate(successPrefab, this).GetComponent<AudioSource>(); ;
         success.enabled = true;
 
-        failure = GetComponent<AudioSource>();
+        failure = Instantiate(failurePrefab, this).GetComponent<AudioSource>(); ;
         failure.enabled = true;
 
-        reel = GetComponent<AudioSource>();
+        reel = Instantiate(reelPrefab, this).GetComponent<AudioSource>(); ;
         reel.enabled = true;
     }
 
@@ -64,4 +70,4 @@ public class SoundMixer : MonoBehaviour
     }
 }
 
-//I don't think reel is working but can't be sure.
+//None of them are working oh shit

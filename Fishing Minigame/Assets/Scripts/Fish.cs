@@ -51,7 +51,7 @@ public class Fish : MonoBehaviour
                 break;
         }
 
-        value = difficultyLevel * 3;
+        value = difficultyLevel;
     }
     
     //==== START ====
