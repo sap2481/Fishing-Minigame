@@ -908,6 +908,30 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: cone1
+      value: 
+      objectReference: {fileID: 1669346037126445199, guid: 0c1c104338283ff489ade4ed5d2c1597, type: 3}
+    - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: cone2
+      value: 
+      objectReference: {fileID: 4249346591222629669, guid: 801af207d20a9904489a592b9537c0de, type: 3}
+    - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: cone3
+      value: 
+      objectReference: {fileID: 1087374504426267443, guid: 94c308dbb5248924bbbe8a06ad2926ee, type: 3}
+    - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: ring1
+      value: 
+      objectReference: {fileID: 6919415360417584828, guid: 67be6393e718115489d7f805cbafc979, type: 3}
+    - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: ring2
+      value: 
+      objectReference: {fileID: 788892371140257082, guid: e824da754265b464fa6d9c5f9afac518, type: 3}
+    - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: ring3
+      value: 
+      objectReference: {fileID: 8710659894286609494, guid: d5759aebfe12bf74191c11703b25b1e7, type: 3}
+    - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
       propertyPath: collisions
       value: 
       objectReference: {fileID: 428767371}
@@ -915,6 +939,10 @@ PrefabInstance:
       propertyPath: conePrefab
       value: 
       objectReference: {fileID: 8076593460426955088, guid: 661c7eaecb5d80f40a9e657994fe49a2, type: 3}
+    - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: ringCenter
+      value: 
+      objectReference: {fileID: 7859602276465442478, guid: 46a00b02f5c43c242bbd05353ba9c56f, type: 3}
     - target: {fileID: 49514252720143956, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
       propertyPath: soundMixer
       value: 
@@ -1375,8 +1403,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clownfish: {fileID: 21300000, guid: 6c6876421f19f81458510c68202a4cbf, type: 3}
+  koi: {fileID: 21300000, guid: 27f11400c89538d49a756fb3241d8d8c, type: 3}
+  sardine: {fileID: 21300000, guid: b02ea7c05c2887849a4f2e95e2cf59f5, type: 3}
   pufferfish: {fileID: 21300000, guid: d58fff80d1f31634891c13b2b7903d15, type: 3}
+  stingray: {fileID: 21300000, guid: 1d2128ae437f2934abfec87794edff5d, type: 3}
+  squid: {fileID: 21300000, guid: 05f2fa84f5e67744592d157ef958dea0, type: 3}
   hammerhead: {fileID: 21300000, guid: 3fbf0451df38b7e44a04a890380b7c20, type: 3}
+  eel: {fileID: 21300000, guid: 8c7661e0168be704ca75fa022da96761, type: 3}
+  greatwhite: {fileID: 21300000, guid: 2298aa7c83f4f9b4babd1102b0653500, type: 3}
 --- !u!1 &2036975810
 GameObject:
   m_ObjectHideFlags: 0

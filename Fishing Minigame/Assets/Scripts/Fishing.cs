@@ -28,6 +28,15 @@ public class Fishing : MonoBehaviour
     List<GameObject> whirlpools;
     [SerializeField] GameObject whirlpoolHolder;
 
+    //New Cone & Ring Art Prefabs
+    [SerializeField] GameObject ringCenter;
+    [SerializeField] GameObject ring1;
+    [SerializeField] GameObject ring2;
+    [SerializeField] GameObject ring3;
+    [SerializeField] GameObject cone1;
+    [SerializeField] GameObject cone2;
+    [SerializeField] GameObject cone3;
+
     //Primary Mechanic Related Fields
     [SerializeField] GameObject conePrefab;
     List<GameObject> targetCones;
@@ -203,41 +212,41 @@ public class Fishing : MonoBehaviour
                         
                         fishOnTheLine = true;
                         if (SceneManager.GetActiveScene().name == "TutorialScene") { ringTotal = 2; }
-                        else { ringTotal = Random.Range(2, 5); }
+                        else { ringTotal = Random.Range(1, 4); }
                         fishInProgress = new Fish(ringTotal);
                         ringCount = 1;
                         soundMixer.PlayReel();
 
                         //Instantiate Bullseye Center
-                        circles.Add(Instantiate(circlePrefab));
+                        circles.Add(Instantiate(ringCenter));
                         circles[0].transform.position = bobber.transform.position;
-                        circles[0].transform.localScale = new Vector3(0.5f, 0.5f);
-                        circles[0].GetComponent<SpriteRenderer>().color = Color.black;
+                        //circles[0].transform.localScale = new Vector3(0.5f, 0.5f);
+                        //circles[0].GetComponent<SpriteRenderer>().color = Color.black;
                         circles[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4 + 4;
 
                         //Instantiate First Target Ring
-                        circles.Add(Instantiate(circlePrefab));
+                        circles.Add(Instantiate(ring1));
                         circles[1].transform.position = circles[0].transform.position;
-                        circles[1].transform.localScale = new Vector3(1.0f, 1.0f);
-                        circles[1].gameObject.GetComponent<SpriteRenderer>().color = new Color32(50, 50, 50, 255);
+                        //circles[1].transform.localScale = new Vector3(1.0f, 1.0f);
+                        //circles[1].gameObject.GetComponent<SpriteRenderer>().color = new Color32(50, 50, 50, 255);
                         circles[1].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4;
 
                         //Instantiate First Target Cone
-                        targetCones.Add(Instantiate(conePrefab));
+                        targetCones.Add(Instantiate(cone1));
                         targetCones[0].transform.position = circles[0].transform.position;
                         float targetRot = Random.Range(-179, 180);
                         targetCones[0].transform.eulerAngles = new Vector3(0, 0, targetRot);
-                        targetCones[0].transform.localScale = new Vector3(circles[1].transform.localScale.x / 22.5f, circles[1].transform.localScale.y / 22.5f);
+                        //targetCones[0].transform.localScale = new Vector3(circles[1].transform.localScale.x / 22.5f, circles[1].transform.localScale.y / 22.5f);
                         targetCones[0].GetComponent<SpriteRenderer>().color = Color.cyan;
                         targetCones[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4 + 2;
 
                         //Instantiate First Moving Cone
-                        movingCones.Add(Instantiate(conePrefab));
+                        movingCones.Add(Instantiate(cone1));
                         movingCones[0].transform.position = circles[0].transform.position;
                         float startRot = Random.Range(-179, 180);
                         movingCones[0].transform.eulerAngles = new Vector3(0, 0, startRot);
-                        movingCones[0].transform.localScale = new Vector3(circles[1].transform.localScale.x / 22.5f, circles[1].transform.localScale.y / 22.5f);
-                        movingCones[0].GetComponent<SpriteRenderer>().color = Color.white;
+                        //movingCones[0].transform.localScale = new Vector3(circles[1].transform.localScale.x / 22.5f, circles[1].transform.localScale.y / 22.5f);
+                        //movingCones[0].GetComponent<SpriteRenderer>().color = Color.white;
                         movingCones[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4 + 3;
                         rotationSpeed = Random.Range(250, 400);
 
@@ -320,28 +329,31 @@ public class Fishing : MonoBehaviour
                             else { movingCones[^1].GetComponent<SpriteRenderer>().color = Color.red; }
 
                             //Instantiate Next Target Ring
-                            circles.Add(Instantiate(circlePrefab));
+                            if (ringCount == 2) { circles.Add(Instantiate(ring2)); }
+                            else if (ringCount == 3) { circles.Add(Instantiate(ring3)); }
                             circles[^1].transform.position = circles[0].transform.position;
-                            circles[^1].transform.localScale = new Vector3(circles[^2].transform.localScale.x + .5f, circles[^2].transform.localScale.y + .5f);
-                            circles[^1].GetComponent<SpriteRenderer>().color = new Color32((byte)(ringCount * 50), (byte)(ringCount * 50), (byte)(ringCount * 50), 255);
+                            //circles[^1].transform.localScale = new Vector3(circles[^2].transform.localScale.x + .5f, circles[^2].transform.localScale.y + .5f);
+                            //circles[^1].GetComponent<SpriteRenderer>().color = new Color32((byte)(ringCount * 50), (byte)(ringCount * 50), (byte)(ringCount * 50), 255);
                             circles[^1].GetComponent<SpriteRenderer>().sortingOrder = circles[^2].GetComponent<SpriteRenderer>().sortingOrder - 4;
 
                             //Instantiate Next Target Cone
-                            targetCones.Add(Instantiate(conePrefab));
+                            if (ringCount == 2) { targetCones.Add(Instantiate(cone2)); }
+                            else if (ringCount == 3) { targetCones.Add(Instantiate(cone3)); }
                             targetCones[^1].transform.position = circles[0].transform.position;
                             float targetRotation = Random.Range(-179, 180);
                             targetCones[^1].transform.eulerAngles = new Vector3(0, 0, targetRotation);
-                            targetCones[^1].transform.localScale = new Vector3(circles[^1].transform.localScale.x / 22.5f, circles[^1].transform.localScale.y / 22.5f);
+                            //targetCones[^1].transform.localScale = new Vector3(circles[^1].transform.localScale.x / 22.5f, circles[^1].transform.localScale.y / 22.5f);
                             targetCones[^1].GetComponent<SpriteRenderer>().color = Color.cyan;
                             targetCones[^1].GetComponent<SpriteRenderer>().sortingOrder = targetCones[^2].GetComponent<SpriteRenderer>().sortingOrder - 4;
 
                             //Instantiate Next Moving Cone
-                            movingCones.Add(Instantiate(conePrefab));
+                            if (ringCount == 2) { movingCones.Add(Instantiate(cone2)); }
+                            else if (ringCount == 3) { movingCones.Add(Instantiate(cone3)); }
                             movingCones[^1].transform.position = circles[0].transform.position;
                             float startRotation = Random.Range(-179, 180);
                             movingCones[^1].transform.eulerAngles = new Vector3(0, 0, startRotation);
-                            movingCones[^1].transform.localScale = new Vector3(circles[^1].transform.localScale.x / 22.5f, circles[^1].transform.localScale.y / 22.5f);
-                            movingCones[^1].GetComponent<SpriteRenderer>().color = Color.white;
+                            //movingCones[^1].transform.localScale = new Vector3(circles[^1].transform.localScale.x / 22.5f, circles[^1].transform.localScale.y / 22.5f);
+                            //movingCones[^1].GetComponent<SpriteRenderer>().color = Color.white;
                             movingCones[^1].GetComponent<SpriteRenderer>().sortingOrder = movingCones[^2].GetComponent<SpriteRenderer>().sortingOrder - 4;
                             rotationSpeed = Random.Range(250, 500);
 

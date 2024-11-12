@@ -125,6 +125,7 @@ public class Tutorial : MonoBehaviour
             case 12:
                 //This plays after either case 10 or 11
                 textBox.text = "This dialogue is gonna keep looping, you know. You're not unlocking anything new by failing. Except this, I suppose. Whoop-dee-doo.";
+                player.GetComponent<Fishing>().FishFail = false;
                 /*if (!numCastsIncremented) { 
                     player.GetComponent<Fishing>().numberOfCasts++; 
                     Debug.Log(player.GetComponent<Fishing>().numberOfCasts);  

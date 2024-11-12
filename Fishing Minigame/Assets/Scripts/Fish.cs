@@ -32,19 +32,19 @@ public class Fish : MonoBehaviour
 
         switch (ringLevel)
         {
-            case 2:
+            case 1:
                 difficultyLevel = Random.Range(40, 70);
                 name = "Clownfish";
                 sprite = allfish.clownfish;
                 break;
 
-            case 3:
+            case 2:
                 difficultyLevel = Random.Range(65, 95);
                 name = "Pufferfish";
                 sprite = allfish.pufferfish;
                 break;
 
-            case 4:
+            case 3:
                 difficultyLevel = Random.Range(90, 120);
                 name = "Hammerhead Shark";
                 sprite = allfish.hammerhead;
