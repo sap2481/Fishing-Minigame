@@ -13,10 +13,10 @@ public class AllFish : MonoBehaviour
     //'Medium' Difficulty Fish
     [SerializeField] public Sprite pufferfish;
     [SerializeField] public Sprite stingray;
-    [SerializeField] public Sprite squid;
+    [SerializeField] public Sprite eel;
 
     //'Difficult' Difficulty Fish
     [SerializeField] public Sprite hammerhead;
-    [SerializeField] public Sprite eel;
+    [SerializeField] public Sprite squid;
     [SerializeField] public Sprite greatwhite;
 }

@@ -198,6 +198,7 @@ public class Outpost : MonoBehaviour
         if (canClick)
         {
             if (index == -1) { index = 0; }
+            //else if (index == 0) { index = 1; }
             player.GetComponent<Player>().Money += fishList[index].Value;
             Debug.Log("I just sold " + fishList[index].Name + " for " + fishList[index].Value);
             player.GetComponent<Fishing>().FishList.RemoveAt(index);

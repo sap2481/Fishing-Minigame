@@ -29,25 +29,65 @@ public class Fish : MonoBehaviour
     public Fish(int ringLevel)
     {
         this.ringLevel = ringLevel;
+        int fishDecider = Random.Range(1, 3);
 
         switch (ringLevel)
         {
             case 1:
                 difficultyLevel = Random.Range(40, 70);
-                name = "Clownfish";
-                sprite = allfish.clownfish;
+                if (fishDecider == 1)
+                {
+                    name = "Clownfish";
+                    sprite = allfish.clownfish;
+                }
+                else if (fishDecider == 2)
+                {
+                    name = "Koi";
+                    sprite = allfish.koi;
+                }
+                else if (fishDecider == 3)
+                {
+                    name = "Sardine";
+                    sprite = allfish.sardine;
+                }
                 break;
 
             case 2:
                 difficultyLevel = Random.Range(65, 95);
-                name = "Pufferfish";
-                sprite = allfish.pufferfish;
+                if (fishDecider == 1)
+                {
+                    name = "Pufferfish";
+                    sprite = allfish.pufferfish;
+                }
+                else if (fishDecider == 2)
+                {
+                    name = "Stingray";
+                    sprite = allfish.stingray;
+                }
+                else if (fishDecider == 3)
+                {
+                    name = "Eel";
+                    sprite = allfish.eel;
+                }
                 break;
 
             case 3:
                 difficultyLevel = Random.Range(90, 120);
-                name = "Hammerhead Shark";
-                sprite = allfish.hammerhead;
+                if (fishDecider == 1)
+                {
+                    name = "Hammerhead Shark";
+                    sprite = allfish.hammerhead;
+                }
+                else if (fishDecider == 2)
+                {
+                    name = "Squid";
+                    sprite = allfish.squid;
+                }
+                else if (fishDecider == 3)
+                {
+                    name = "Great White Shark";
+                    sprite = allfish.greatwhite;
+                }
                 break;
         }
 

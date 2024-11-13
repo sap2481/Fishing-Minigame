@@ -39,9 +39,6 @@ public class Tutorial : MonoBehaviour
 
         player = GameObject.FindGameObjectWithTag("Player");
         player.GetComponent<Fishing>().enabled = false;
-
-        waitForFishStarted = false;
-        numCastsIncremented = false;
     }
 
     //==== UPDATE ====
@@ -72,6 +69,7 @@ public class Tutorial : MonoBehaviour
                 break;
 
             case 3:
+                //if (player.GetComponent<Fishing>().bobber == null) { increment = 2; }
                 textBox.text = "Good job! When the crosshair is yellow, it means your line is cast, and it's time to wait until you see a notification appear. When it does, you have a fish on your line, and need to click quickly. Click now to retract your line.";
                 break;
 
@@ -80,19 +78,11 @@ public class Tutorial : MonoBehaviour
                 break;
 
             case 5:
+                //if (player.GetComponent<Fishing>().crosshair.active == true) { increment = 4; }
                 textBox.text = "Why am I a fork, you ask? That's a damn good question. Could you ask the developer and see what he says? He's the one who made me this way.";
-                /*if (!numCastsIncremented)
-                {
-                    player.GetComponent<Fishing>().numberOfCasts++;
-                    Debug.Log(player.GetComponent<Fishing>().numberOfCasts);
-                    numCastsIncremented = true;
-                }*/
-                //if (!waitForFishStarted) { StartCoroutine(player.GetComponent<Fishing>().WaitForFish(Random.Range(3.0f, 5.0f), player.GetComponent<Fishing>().numberOfCasts)); waitForFishStarted = true; }
                 break;
 
             case 6:
-                waitForFishStarted = false;
-                numCastsIncremented = false;
                 if (player.GetComponent<Fishing>().crosshair.active == true) { increment = 10; } //Jump to increment 10 if the player screws up getting a fish on the line
                 textBox.text = "Good! Now, You see that blue area there? Try to click when the moving white bar is overlapping with that blue one. A lot of clicking, I know.";
                 break;
@@ -111,14 +101,10 @@ public class Tutorial : MonoBehaviour
                 break;
 
             case 10:
-                waitForFishStarted = false;
-                numCastsIncremented = false;
                 textBox.text = "Did you miss the notification? Or did you click before it even came up? Don't do either of those things. Try again. And be sure it's on the whirlpool, or you're gonna have to wait a lot longer.";
                 break;
 
             case 11:
-                waitForFishStarted = false;
-                numCastsIncremented = false;
                 textBox.text = "You didn't catch it. Okay, that's fine, let's try again. Cast your line - yes, please, at the whirlpool.";
                 break;
 
@@ -126,12 +112,6 @@ public class Tutorial : MonoBehaviour
                 //This plays after either case 10 or 11
                 textBox.text = "This dialogue is gonna keep looping, you know. You're not unlocking anything new by failing. Except this, I suppose. Whoop-dee-doo.";
                 player.GetComponent<Fishing>().FishFail = false;
-                /*if (!numCastsIncremented) { 
-                    player.GetComponent<Fishing>().numberOfCasts++; 
-                    Debug.Log(player.GetComponent<Fishing>().numberOfCasts);  
-                    numCastsIncremented = true; 
-                }
-                if (!waitForFishStarted) { StartCoroutine(player.GetComponent<Fishing>().WaitForFish(Random.Range(3.0f, 5.0f), player.GetComponent<Fishing>().numberOfCasts)); waitForFishStarted = true; }*/
                 break;
 
             default:
