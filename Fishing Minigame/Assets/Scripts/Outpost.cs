@@ -121,33 +121,39 @@ public class Outpost : MonoBehaviour
         if (player.GetComponent<Player>().Money >= speedUpgradeCost)
         {
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(1).GetChild(2).GetComponent<Image>().color = Color.green;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(1).GetChild(2).GetChild(0).GetComponent<TMP_Text>().color = Color.green;
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(1).GetChild(2).GetComponent<Button>().onClick.AddListener(delegate { UpgradeSpeed(speedUpgradeCost); });
         }
         else
         {
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(1).GetChild(2).GetComponent<Image>().color = Color.red;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(1).GetChild(2).GetChild(0).GetComponent<TMP_Text>().color = Color.red;
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(1).GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
         }
 
         if (player.GetComponent<Player>().Money >= rangeUpgradeCost)
         {
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(2).GetChild(2).GetComponent<Image>().color = Color.green;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(2).GetChild(2).GetChild(0).GetComponent<TMP_Text>().color = Color.green;
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(2).GetChild(2).GetComponent<Button>().onClick.AddListener(delegate { UpgradeRange(rangeUpgradeCost); });
         }
         else
         {
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(2).GetChild(2).GetComponent<Image>().color = Color.red;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(2).GetChild(2).GetChild(0).GetComponent<TMP_Text>().color = Color.red;
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(2).GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
         }
 
         if (player.GetComponent<Player>().Money >= hullUpgradeCost)
         {
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetComponent<Image>().color = Color.green;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetChild(0).GetComponent<TMP_Text>().color = Color.green;
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetComponent<Button>().onClick.AddListener(delegate { UpgradeHull(hullUpgradeCost); });
         }
         else
         {
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetComponent<Image>().color = Color.red;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetChild(0).GetComponent<TMP_Text>().color = Color.red;
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
         }
     }

@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   increment: 0
-  dialogueBoxPrefab: {fileID: 8078243606478333977, guid: 04395b979128d224997f7fec06efad38, type: 3}
+  dialogueBoxPrefab: {fileID: 8078243606478333977, guid: b94d3da231f0c584299b031998bdd83e, type: 3}
 --- !u!4 &217775908
 Transform:
   m_ObjectHideFlags: 0

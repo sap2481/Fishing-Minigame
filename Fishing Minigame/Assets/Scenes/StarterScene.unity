@@ -572,10 +572,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bfe8941524ee984296496546eb3252f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuPrefab: {fileID: 8845456324351477861, guid: 92cf5052591024f4996bb6891310e986, type: 3}
+  menuPrefab: {fileID: 8845456324351477861, guid: df9f2544d921b19489c380bb8a27309c, type: 3}
   menuInstance: {fileID: 0}
   tempFishSprite: {fileID: 21300000, guid: 3b1e64c9855e9d34286258a294b319b2, type: 3}
   collisions: {fileID: 428767371}
+  blankIcon: {fileID: 21300000, guid: 6e827b116189c2749a16318f39a48978, type: 3}
 --- !u!114 &428767371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -846,6 +847,10 @@ PrefabInstance:
       propertyPath: collisions
       value: 
       objectReference: {fileID: 428767371}
+    - target: {fileID: -495538985967978783, guid: 528a017658db4204d8b76f49ad2b543d, type: 3}
+      propertyPath: opMenuPrefab
+      value: 
+      objectReference: {fileID: 8078243606478333977, guid: 68f0ecf4daefe924fad6e542b483814c, type: 3}
     - target: {fileID: -495538985967978783, guid: 528a017658db4204d8b76f49ad2b543d, type: 3}
       propertyPath: tempFishSprite
       value: 
@@ -1407,9 +1412,9 @@ MonoBehaviour:
   sardine: {fileID: 21300000, guid: b02ea7c05c2887849a4f2e95e2cf59f5, type: 3}
   pufferfish: {fileID: 21300000, guid: d58fff80d1f31634891c13b2b7903d15, type: 3}
   stingray: {fileID: 21300000, guid: 1d2128ae437f2934abfec87794edff5d, type: 3}
-  squid: {fileID: 21300000, guid: 05f2fa84f5e67744592d157ef958dea0, type: 3}
-  hammerhead: {fileID: 21300000, guid: 3fbf0451df38b7e44a04a890380b7c20, type: 3}
   eel: {fileID: 21300000, guid: 8c7661e0168be704ca75fa022da96761, type: 3}
+  hammerhead: {fileID: 21300000, guid: 3fbf0451df38b7e44a04a890380b7c20, type: 3}
+  squid: {fileID: 21300000, guid: 05f2fa84f5e67744592d157ef958dea0, type: 3}
   greatwhite: {fileID: 21300000, guid: 2298aa7c83f4f9b4babd1102b0653500, type: 3}
 --- !u!1 &2036975810
 GameObject:

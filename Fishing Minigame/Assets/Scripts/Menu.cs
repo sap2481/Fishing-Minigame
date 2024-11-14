@@ -23,6 +23,7 @@ public class Menu : MonoBehaviour
 
     [SerializeField] Sprite tempFishSprite; //This is temporary functionality until each fish has their own sprite
     [SerializeField] Collisions collisions;
+    [SerializeField] Sprite blankIcon;
     Vector2 mousePosition;
     
     //==== START ====
@@ -91,7 +92,7 @@ public class Menu : MonoBehaviour
                 }
                 else
                 {
-                    menuInstance.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(i).GetComponent<Image>().sprite = null;
+                    menuInstance.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(i).GetComponent<Image>().sprite = blankIcon;
                     menuInstance.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(i).GetChild(0).GetComponent<TMP_Text>().text = "Name: ---";
                     menuInstance.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(i).GetChild(1).GetComponent<TMP_Text>().text = "Value: ---";
                 }
