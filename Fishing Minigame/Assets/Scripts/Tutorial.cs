@@ -22,8 +22,7 @@ public class Tutorial : MonoBehaviour
     GameObject player;
     Fishing playerFishing;
 
-    bool waitForFishStarted;
-    bool numCastsIncremented;
+    bool checkIfFishing;
     
     //==== START ====
     void Start()
@@ -39,6 +38,7 @@ public class Tutorial : MonoBehaviour
 
         player = GameObject.FindGameObjectWithTag("Player");
         player.GetComponent<Fishing>().enabled = false;
+        checkIfFishing = false;
     }
 
     //==== UPDATE ====
@@ -47,8 +47,8 @@ public class Tutorial : MonoBehaviour
         mouseLeftThisFrame = Mouse.current.leftButton.IsPressed();
         if (canClick && !mouseLeftThisFrame && mouseLeftLastFrame) //If a single click was just completed, change the dialogue
         {
-            if (increment == 10) { increment = 12; }
-            else if (increment == 12) { increment = 6; }
+            if (increment == 12) { increment = 6; }
+            else if (increment == 2 || increment == 4 || increment == 10 || increment == 11) { StartCoroutine(WaitToCheck(0.1f)); } //Delays a check by 0.1 seconds to allow the fishing mechanic to catch up to the tutorial
             else { increment++; }
             StartCoroutine(WaitToClick(0.5f));
         }
@@ -64,12 +64,11 @@ public class Tutorial : MonoBehaviour
                 break;
 
             case 2:
-                textBox.text = "See that crosshair? It turns green when you're close enough to cast your line, and red when you're too far out. It's ideal to fish at whirlpools, but click anywhere for now to cast your line.";
+                textBox.text = "See that crosshair? It turns green when you're close enough to cast your line, and red when you're too far out. It's ideal to fish at whirlpools, but click anywhere your crosshair is green for now to cast your line.";
                 player.GetComponent<Fishing>().enabled = true;
                 break;
 
             case 3:
-                //if (player.GetComponent<Fishing>().bobber == null) { increment = 2; }
                 textBox.text = "Good job! When the crosshair is yellow, it means your line is cast, and it's time to wait until you see a notification appear. When it does, you have a fish on your line, and need to click quickly. Click now to retract your line.";
                 break;
 
@@ -78,12 +77,11 @@ public class Tutorial : MonoBehaviour
                 break;
 
             case 5:
-                //if (player.GetComponent<Fishing>().crosshair.active == true) { increment = 4; }
                 textBox.text = "Why am I a fork, you ask? That's a damn good question. Could you ask the developer and see what he says? He's the one who made me this way.";
                 break;
 
             case 6:
-                if (player.GetComponent<Fishing>().crosshair.active == true) { increment = 10; } //Jump to increment 10 if the player screws up getting a fish on the line
+                if (player.GetComponent<Fishing>().crosshair.activeSelf == true) { increment = 10; } //Jump to increment 10 if the player screws up getting a fish on the line
                 textBox.text = "Good! Now, You see that blue area there? Try to click when the moving white bar is overlapping with that blue one. A lot of clicking, I know.";
                 break;
 
@@ -128,5 +126,19 @@ public class Tutorial : MonoBehaviour
         canClick = false;
         yield return new WaitForSeconds(waitTime);
         canClick = true;
+    }
+
+    private IEnumerator WaitToCheck(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        if (player.GetComponent<Fishing>().crosshair.activeSelf == true) { checkIfFishing = false; Debug.Log("Player is NOT fishing"); } 
+        else { 
+            checkIfFishing = true; 
+            Debug.Log("Player IS Fishing");
+            if (increment == 10) { increment = 12; }
+            else { increment++; }
+            Debug.Log(player.GetComponent<Fishing>().waitingTime);
+            if (increment != 3) { StartCoroutine(player.GetComponent<Fishing>().WaitForFish(player.GetComponent<Fishing>().waitingTime, player.GetComponent<Fishing>().numberOfCasts)); }
+        }
     }
 }

@@ -33,6 +33,8 @@ public class Outpost : MonoBehaviour
 
     bool canClick; //A bool to ensure that one button at a time is ever in progress
 
+    Tutorial tutorial; //Check if the tutorial is active
+
     //==== START ====
     void Start()
     {
@@ -48,6 +50,9 @@ public class Outpost : MonoBehaviour
         originalHull = 100;
 
         canClick = true;
+
+        //Find Tutorial, if applicable
+        tutorial = GameObject.FindObjectOfType<Tutorial>();
     }
 
     //==== UPDATE ====
@@ -69,7 +74,7 @@ public class Outpost : MonoBehaviour
             //Set range to zero so player can't cast on the outpost
             if (player.GetComponent<Fishing>() != null) { player.GetComponent<Fishing>().Range = 0; }
 
-            if (mouseLeftLastFrame && !mouseLeftThisFrame && !outpostActive && !menu.menuInstance) //If the player clicked on the outpost, open the outpost menu
+            if (tutorial == null && (mouseLeftLastFrame && !mouseLeftThisFrame && !outpostActive && !menu.menuInstance)) //If the player clicked on the outpost, open the outpost menu
             {
                 outpostActive = true;
                 player.GetComponent<Player>().Hull = 100; //Because the player docked at an outpost, reset health to full

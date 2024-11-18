@@ -25,7 +25,7 @@ public class Fishing : MonoBehaviour
     public GameObject notification;
     [SerializeField] GameObject circlePrefab;
     [SerializeField] GameObject whirlpoolPrefab;
-    List<GameObject> whirlpools;
+    public List<GameObject> whirlpools;
     [SerializeField] GameObject whirlpoolHolder;
 
     //New Cone & Ring Art Prefabs
@@ -71,6 +71,7 @@ public class Fishing : MonoBehaviour
     float distance; //How far is the player attempting to cast?
     bool fishFail; //Declare if the player failed to catch a fish (used for the CatchTracker)
     float whirlpoolRotSpeed; //How fast the whirlpools rotate
+    public float waitingTime;
 
     Tutorial tutorial;
 
@@ -192,17 +193,17 @@ public class Fishing : MonoBehaviour
                         bobber.transform.position = mousePosition;
                         bobber.GetComponent<SpriteRenderer>().color = Color.yellow;
                         numberOfCasts++;
-                        float waitingTime = Random.Range(10f, 15f);
+                        waitingTime = Random.Range(10f, 15f);
                         foreach (GameObject whirlpool in whirlpools)
                         {
-                            if (collisions.CheckSpriteCollision(whirlpool, bobber))
+                            if (collisions.CheckColliderCollision(whirlpool, bobber))
                             {
                                 waitingTime = Random.Range(3.0f, 5.0f);
                                 break;
                             }
                         }
                         soundMixer.PlayBloop();
-                        if (tutorial == null || (tutorial != null && (tutorial.increment == 5 || tutorial.increment == 12))) { StartCoroutine(WaitForFish(waitingTime, numberOfCasts)); }
+                        if (tutorial == null) { StartCoroutine(WaitForFish(waitingTime, numberOfCasts)); }
                         
                         break;
                     
