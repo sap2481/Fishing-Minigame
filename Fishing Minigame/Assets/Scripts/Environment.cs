@@ -60,19 +60,19 @@ public class Environment : MonoBehaviour
         }
 
         //Create Rocks
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
-            rocks.Add(Instantiate(rockPrefab, new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f)), Quaternion.identity, rockHolder.transform));
+            rocks.Add(Instantiate(rockPrefab, new Vector3(Random.Range(-50f, 50f), Random.Range(-50f, 50f)), Quaternion.identity, rockHolder.transform));
 
             for (int j = 0; j < player.GetComponent<Fishing>().whirlpools.Count; j++)
             {
-                //Make sure rocks don't spawn over the player or the outpost
+                //Make sure rocks don't spawn over the player, the outpost, or any whirlpools
                 bool isNotColliding = false;
                 while (!isNotColliding)
                 {
                     if (collisions.CheckSpriteCollision(rocks[i], player) || collisions.CheckSpriteCollision(rocks[i], outpost.gameObject) || collisions.CheckSpriteCollision(rocks[i], player.GetComponent<Fishing>().whirlpools[j]))
                     {
-                        rocks[i].transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f));
+                        rocks[i].transform.position = new Vector3(Random.Range(-50f, 50f), Random.Range(-50f, 50f));
                     }
                     else
                     {

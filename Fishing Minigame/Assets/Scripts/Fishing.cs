@@ -66,11 +66,10 @@ public class Fishing : MonoBehaviour
     int fishCaught; //Did the player catch a fish?
     public int numberOfCasts; //Make sure that each cast is independent of each other cast (aka make sure that the timing of a previous cast doesn't carry over to the next)
     public bool fishOnTheLine; //Is a fish on the line?
-    float range; //The range at which a player can cast their line away from their ship
+    public float range; //The range at which a player can cast their line away from their ship
     float rangeStorage; //Range gets changed around a bunch, so I need a property that maintains the current range value
     float distance; //How far is the player attempting to cast?
     bool fishFail; //Declare if the player failed to catch a fish (used for the CatchTracker)
-    float whirlpoolRotSpeed; //How fast the whirlpools rotate
     public float waitingTime;
 
     Tutorial tutorial;
@@ -118,9 +117,9 @@ public class Fishing : MonoBehaviour
         //Instantiate Whirlpools
         if (SceneManager.GetActiveScene().name != "TutorialScene")
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 20; i++)
             {
-                whirlpools.Add(Instantiate(whirlpoolPrefab, new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30f)), Quaternion.identity, whirlpoolHolder.transform));
+                whirlpools.Add(Instantiate(whirlpoolPrefab, new Vector3(Random.Range(-50f, 50f), Random.Range(-50f, 50f)), Quaternion.identity, whirlpoolHolder.transform));
             }
         }
         else
@@ -142,7 +141,6 @@ public class Fishing : MonoBehaviour
         rotationSpeed = 0;
         rotationDifference = 0;
         leftOrRight = false;
-        whirlpoolRotSpeed = 50;
 
         /*Deprecated Variable Initialization
         circleScale = 0;
@@ -284,7 +282,7 @@ public class Fishing : MonoBehaviour
                             {
                                 if (collisions.CheckSpriteCollision(whirlpool, circles[0]) && SceneManager.GetActiveScene().name != "TutorialScene")
                                 {
-                                    whirlpool.transform.position = new Vector3(Random.Range(-30f, 30f), Random.Range(-30f, 30));
+                                    whirlpool.transform.position = new Vector3(Random.Range(-50f, 50f), Random.Range(-50f, 50));
                                     break;
                                 }
                             }
@@ -578,7 +576,7 @@ public class Fishing : MonoBehaviour
         if (lineCast && currentCastNum == numberOfCasts) //If the line is still cast after the wait time has passed, and is still on the current cast...
         {
             notification = Instantiate(notificationPrefab);
-            notification.transform.position = new Vector3(bobber.transform.position.x, bobber.transform.position.y + 1.25f, bobber.transform.position.z);
+            notification.transform.position = new Vector3(bobber.transform.position.x, bobber.transform.position.y + 0.75f, bobber.transform.position.z);
             yield return new WaitForSeconds(1.0f);
             if (notification != null) //If the notification hasn't been destroyed yet (aka if the player hasn't caught the fish), destroy the notification.
             {

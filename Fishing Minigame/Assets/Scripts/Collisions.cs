@@ -51,7 +51,6 @@ public class Collisions : MonoBehaviour
 
         if (collider1.bounds.Intersects(collider2.bounds))
         {
-            Debug.Log("Is colliding");
             return true;
         }
         return false;

@@ -18,11 +18,11 @@ public class QuestManager : MonoBehaviour
     bool qKeyLastFrame;
     bool qKeyThisFrame;
     public bool questlogActive;
-    bool countdownStarted;
+    bool countdownActive;
 
     //Timer Panel
     [SerializeField] GameObject timerPanel;
-    int timeRemaining;
+    float timeRemaining;
 
     //Other Relevant Instances
     GameObject player;
@@ -82,28 +82,55 @@ public class QuestManager : MonoBehaviour
                 if (i < questList.Count)
                 {
                     questlogInstance.transform.GetChild(0).GetChild(0).GetChild(i).GetChild(0).GetComponent<TMP_Text>().text = questList[i].Description;
+                    questlogInstance.transform.GetChild(0).GetChild(0).GetChild(i).GetComponent<Image>().color = Color.yellow;
                 }
                 else
                 {
                     questlogInstance.transform.GetChild(0).GetChild(0).GetChild(i).GetChild(0).GetComponent<TMP_Text>().text = "--EMPTY--";
+                    questlogInstance.transform.GetChild(0).GetChild(0).GetChild(i).GetComponent<Image>().color = Color.white;
                 }
             }
         }
 
-        //If a quest is a timer quest, activate the timer panel
-        foreach (Quest quest in questList)
+        //If a quest is a timer quest, and the timer panel hasn't been activated yet, activate the timer panel
+        if (!timerPanel.activeSelf)
+        {
+            foreach (Quest quest in questList)
+            {
+                timerPanel.SetActive(false);
+                if (quest.Type == 2) //if the quest is a timer quest, set the timer panel to active
+                {
+                    timerPanel.SetActive(true);
+                    timeRemaining = quest.Seconds;
+                    timerPanel.transform.GetChild(0).GetComponent<TMP_Text>().text = "Time Left: " + timeRemaining;
+                    break;
+                }
+            }
+        }
+
+        if (CheckForTimerQuest()) //If there's a timer quest in the questlog, count down the timer
+        {
+            if (!menu.menuInstance && !outpost.outpostActive && !questlogActive) { timeRemaining -= Time.deltaTime; } //If no menus are open, count down the timer
+            timerPanel.transform.GetChild(0).GetComponent<TMP_Text>().text = "Time Left: " + (int)timeRemaining;
+
+            //If the player runs out of time, kill the timer panel & the quest
+            if (timeRemaining <= 0)
+            {
+                timeRemaining = 0;
+                timerPanel.SetActive(false);
+                foreach (Quest quest in questList)
+                {
+                    if (quest.Type == 2)
+                    {
+                        questList.Remove(quest);
+                        break;
+                    }
+                }
+            }
+        }
+        else //If there is no timer quest, deactivate panel
         {
             timerPanel.SetActive(false);
-            if (quest.Type == 2) //if the quest is a timer quest, set the timer panel to active
-            {
-                timerPanel.SetActive(true);
-                if (!countdownStarted)
-                {
-                    StartCoroutine(StartCountdown(quest.Seconds));
-                    countdownStarted = true;
-                }
-                break;
-            }
         }
 
         qKeyLastFrame = qKeyThisFrame;
@@ -117,26 +144,16 @@ public class QuestManager : MonoBehaviour
         questlogInstance = null;
         player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
     }
-    public IEnumerator StartCountdown(int countdownValue)
+    public bool CheckForTimerQuest()
     {
-        timeRemaining = countdownValue;
-        while (timeRemaining > 0)
-        {
-            if (timerPanel.activeSelf && !menu.menuInstance && !outpost.outpostActive && !questlogActive)
-            {
-                yield return new WaitForSeconds(1.0f);
-                timeRemaining--;
-                timerPanel.transform.GetChild(0).GetComponent<TMP_Text>().text = timeRemaining.ToString();
-            }
-        }
-        
-        timerPanel.SetActive(false);
+        bool timerQuest = false;
         foreach (Quest quest in questList)
         {
             if (quest.Type == 2)
             {
-                questList.Remove(quest);
+                timerQuest = true;
             }
         }
+        return timerQuest;
     }
 }

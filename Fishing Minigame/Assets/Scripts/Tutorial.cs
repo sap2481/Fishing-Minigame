@@ -9,7 +9,6 @@ public class Tutorial : MonoBehaviour
 {
     //==== FIELDS ====
     public int increment; //Increment to determine dialogue within the dialogue box
-    int lastIncrement; //What was the last dialogue that played?
 
     [SerializeField] GameObject dialogueBoxPrefab;
     GameObject dialogueBox;
@@ -30,7 +29,6 @@ public class Tutorial : MonoBehaviour
         dialogueBox = Instantiate(dialogueBoxPrefab);
         textBox = dialogueBox.transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<TMP_Text>();
         increment = 0;
-        lastIncrement = 0;
 
         canClick = true;
         mouseLeftLastFrame = false;
@@ -132,7 +130,8 @@ public class Tutorial : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         if (player.GetComponent<Fishing>().crosshair.activeSelf == true) { checkIfFishing = false; Debug.Log("Player is NOT fishing"); } 
-        else { 
+        else 
+        { 
             checkIfFishing = true; 
             Debug.Log("Player IS Fishing");
             if (increment == 10) { increment = 12; }

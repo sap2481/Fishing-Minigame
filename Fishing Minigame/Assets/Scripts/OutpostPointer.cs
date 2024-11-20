@@ -18,6 +18,7 @@ public class OutpostPointer : MonoBehaviour
 
     [SerializeField] GameObject pointer;
     GameObject pointerObj;
+    Vector3 pointerPosition;
 
     Vector3 distance;
 
@@ -43,21 +44,29 @@ public class OutpostPointer : MonoBehaviour
     {
         playerPosition = player.transform.position;
 
-        if (outpost.gameObject.GetComponent<SpriteRenderer>().isVisible == false && pointerObj == null) //If the outpost isn't visible in the camera, instantiate the pointer
+        Vector3 viewPos = cam.WorldToViewportPoint(outpostPosition); //Get outpost position relative to the viewport
+        if (viewPos.x >= 0 && viewPos.x <= 1 && viewPos.y >= 0 && viewPos.y <= 1) //If the outpost is inside the viewport...
         {
-            pointerObj = Instantiate(pointer);
-            //Debug.Log("Should've instantiated the pointer.");
+            if (pointerObj != null) //If it hasn't been destroyed, destroy the pointer
+            {
+                Destroy(pointerObj.gameObject);
+                pointerObj = null;
+            }
         }
-        else //If it is visible in the camera, destroy the pointer
+        else //If the outpost is NOT inside the viewport
         {
-            if (pointerObj != null) { Destroy(pointerObj.gameObject); }
-            pointerObj = null;
-        }
+            if (pointerObj == null) { pointerObj = Instantiate(pointer); } //If there is no pointerObj, instantiate one
+            
+            pointerPosition = outpostPosition;
 
-        if (pointerObj != null) //If there's a pointer...
-        {
-            Vector3 pos = camWidth * Vector3.Normalize(outpostPosition - playerPosition) + playerPosition;
-            pointerObj.transform.position = pos;
+            //Adjust pointer position to hover at the edge of the viewport
+            if (pointerPosition.x < playerPosition.x - camWidth) { pointerPosition.x = playerPosition.x - camWidth + 0.5f; }
+            else if (pointerPosition.x > playerPosition.x + camWidth) { pointerPosition.x = playerPosition.x + camWidth - 0.5f; }
+
+            if (pointerPosition.y < playerPosition.y - (camHeight / 2)) { pointerPosition.y = playerPosition.y - (camHeight / 2) + 0.5f; }
+            else if (pointerPosition.y > playerPosition.y + (camHeight / 2)) { pointerPosition.y = playerPosition.y + (camHeight / 2) - 0.5f; }
+
+            pointerObj.transform.position = pointerPosition; //Set pointer transform position
         }
     }
 }

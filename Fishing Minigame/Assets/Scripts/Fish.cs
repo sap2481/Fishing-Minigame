@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,11 +14,6 @@ public class Fish : MonoBehaviour
 
     //Sprites
     AllFish allfish = GameObject.FindObjectOfType<AllFish>();
-
-    /*//Name Arrays (these will not be used until later in development)
-    string[] twoRingNames =  { "Sardine", "Clownfish", "Koi" };
-    string[] threeRingNames = { "Pufferfish", "Sting Ray", "Squid" };
-    string[] fourRingNames = { "Moray Eel", "Hammerhead Shark", "Great White Shark" };*/
 
     //==== PROPERTIES ====
     public float DifficultyLevel { get { return difficultyLevel; } }

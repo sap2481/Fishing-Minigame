@@ -58,7 +58,7 @@ public class Outpost : MonoBehaviour
         //Find Tutorial, if applicable
         tutorial = GameObject.FindObjectOfType<Tutorial>();
 
-        //EEVERYTHING RELATED TO QUEST GENERATION IS HERE
+        //Instantiate Quest Fields
         questManager = GameObject.FindObjectOfType<QuestManager>();
         availableQuests = new List<Quest>();
         canGenerateTimerQuest = true;
@@ -86,7 +86,11 @@ public class Outpost : MonoBehaviour
             if (tutorial == null && (mouseLeftLastFrame && !mouseLeftThisFrame && !outpostActive && !menu.menuInstance && !questManager.questlogActive)) //If the player clicked on the outpost, open the outpost menu
             {
                 outpostActive = true;
-                player.GetComponent<Player>().Hull = 100; //Because the player docked at an outpost, reset health to full
+                player.GetComponent<Player>().Hull = player.GetComponent<Player>().MaxHull; //Because the player docked at an outpost, reset health to full
+
+                maxSpeedStorage = player.GetComponent<Player>().MaxSpeed;
+                player.GetComponent<Player>().MaxSpeed = 0;
+
                 opMenuInstance = Instantiate(opMenuPrefab);
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Button>().onClick.AddListener(xOut);
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<Button>().onClick.AddListener(BuyButton);
@@ -97,8 +101,8 @@ public class Outpost : MonoBehaviour
         }
         else
         {
-            //Reset fishing range
-            if (player.GetComponent<Fishing>() != null) { player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage; ; }
+            //Reset fishing range & player speed
+            if (player.GetComponent<Fishing>() != null) { player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage; }
         }
 
         //Update Money the Player Has
@@ -114,6 +118,7 @@ public class Outpost : MonoBehaviour
         outpostActive = false;
         Destroy(opMenuInstance.gameObject);
         opMenuInstance = null;
+        player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
     }
 
     public void BuyButton() //Change the menu to the Buy screen
@@ -123,7 +128,7 @@ public class Outpost : MonoBehaviour
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).gameObject.SetActive(false); //Set Quest panel to inactive
 
         //Calculate Upgrade Costs
-        speedUpgradeCost = 200 + ((player.GetComponent<Player>().MaxSpeed - originalSpeed) * 200);
+        speedUpgradeCost = 200 + ((maxSpeedStorage - originalSpeed) * 200);
         rangeUpgradeCost = 300 + ((player.GetComponent<Fishing>().RangeStorage - originalRange) * 250);
         hullUpgradeCost = 400 + ((player.GetComponent<Player>().Hull - originalHull) * 6);
 
@@ -195,8 +200,9 @@ public class Outpost : MonoBehaviour
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(0).GetComponent<TMP_Text>().text = thisFish.Name;
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(1).GetComponent<TMP_Text>().text = "$" + thisFish.Value;
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(2).GetComponent<Image>().sprite = thisFish.Sprite;
+                    int index = i;
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(i).GetChild(3).GetComponent<Button>().onClick.AddListener
-                        (delegate { SellTheFish(player.GetComponent<Fishing>().FishList, player.GetComponent<Fishing>().FishList.FindIndex(a => a.Value == thisFish.Value)); });
+                        (delegate { SellTheFish(player.GetComponent<Fishing>().FishList, index); }); //FindIndex(a => a.Value == thisFish.Value)
                 }
                 else //If there is not a fish to go in the slot, set the slot to inactive
                 {
@@ -212,6 +218,8 @@ public class Outpost : MonoBehaviour
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).gameObject.SetActive(false); //Set Sell panel to inactive
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).gameObject.SetActive(false); //Set Buy panel to inactive
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).gameObject.SetActive(true); //Set Quest panel to active <--
+
+        canGenerateTimerQuest = true;
 
         //Generate available quests
         foreach (Quest quest in questManager.questList) //Check to see if a timer quest can be created (only one can be active at a time)
@@ -240,15 +248,27 @@ public class Outpost : MonoBehaviour
         //Fill in Quest Slots for Available Quests
         for (int i = 0; i < 3 - questManager.questList.Count; i++)
         {
-            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetComponent<Image>().color = Color.green;
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(0).GetComponent<TMP_Text>().text = availableQuests[i].Dialogue;
-
-            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<Image>().color = Color.green;
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
-            int index = i;
-            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<Button>().onClick.AddListener(delegate { AcquireQuest(availableQuests, index); });
-            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = "Acquire";
-            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().color = Color.green;
+
+            if (availableQuests[i].Type == 1 || (availableQuests[i].Type == 2 && player.GetComponent<Fishing>().FishList.Count == 0)) //If the quest is a fish fetch quest or if it's a timer quest and the player's cargo hold is empty...
+            {
+                int index = i;
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<Button>().onClick.AddListener(delegate { AcquireQuest(availableQuests, index); });
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = "Acquire";
+
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetComponent<Image>().color = Color.green;
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<Image>().color = Color.green;
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().color = Color.green;
+            }
+            else //If it's a timer quest & the player's cargo hold is NOT empty...
+            {
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = "Acquire";
+
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetComponent<Image>().color = Color.red;
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<Image>().color = Color.red;
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().color = Color.red;
+            }
         }
 
         //Fill in Quest Slots for Acquired Quests
@@ -261,15 +281,15 @@ public class Outpost : MonoBehaviour
             {
                 if (player.GetComponent<Fishing>().FishList.Count != 0) //If players have fish in their cargo hold...
                 {
-                    foreach (Fish fish in player.GetComponent<Fishing>().FishList) //Loop through the player's cargo hold
+                    for (int j = 0; j < player.GetComponent<Fishing>().FishList.Count; j++) //Loop through the player's cargo hold
                     {
-                        if (fish.Name == questManager.questList[i].GoalFish.Name) //If one of the fishes is the quest's goal fish, set up button accordingly
+                        if (player.GetComponent<Fishing>().FishList[j].Name == questManager.questList[i].GoalFish.Name) //If one of the fishes is the quest's goal fish, set up button accordingly
                         {
                             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Image>().color = Color.green;
                             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
-                            int index = i;
-                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.AddListener(delegate { ReturnFishFetchQuest(index, fish); });
-                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = $"Complete (+ ${fish.Value * 2})";
+                            int qIndex = i; int fIndex = j;
+                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.AddListener(delegate { ReturnFishFetchQuest(qIndex, fIndex); });
+                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = $"Complete (+ ${player.GetComponent<Fishing>().FishList[j].Value * 2})";
                             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().color = Color.green;
                             break;
                         }
@@ -303,7 +323,8 @@ public class Outpost : MonoBehaviour
                 {
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Image>().color = Color.green;
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
-                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.AddListener(delegate { ReturnTimerQuest(questManager.questList[i]); });
+                    int index = i;
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.AddListener(delegate { ReturnTimerQuest(index); });
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = $"Complete (+ ${questManager.questList[i].Reward})";
                     opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().color = Color.green;
                 }
@@ -315,10 +336,10 @@ public class Outpost : MonoBehaviour
     {
         if (canClick)
         {
-            if (index == -1) { index = 0; }
+            if (index == -1) { Debug.Log("Index was -1, so now is 0"); index = 0; }
             //else if (index == 0) { index = 1; }
             player.GetComponent<Player>().Money += fishList[index].Value;
-            Debug.Log("I just sold " + fishList[index].Name + " for " + fishList[index].Value);
+            Debug.Log("I just sold " + fishList[index].Name + " at Index " + index + " for " + fishList[index].Value);
             player.GetComponent<Fishing>().FishList.RemoveAt(index);
             SellButton();
             StartCoroutine(WaitForButtonClick(0.25f));
@@ -366,24 +387,24 @@ public class Outpost : MonoBehaviour
             StartCoroutine(WaitForButtonClick(0.25f));
         }
     }
-    public void ReturnFishFetchQuest(int index, Fish fish)
+    public void ReturnFishFetchQuest(int qIndex, int fIndex)
     {
         if (canClick)
         {
-            player.GetComponent<Player>().Money += fish.Value * 2;
-            player.GetComponent<Fishing>().FishList.Remove(fish); //Removes the wrong fish?????
-            questManager.questList.RemoveAt(index); //Something broke here.
-            QuestButton(); //Something may fail here if I don't immediately infuse the available quest list with another quest.
+            player.GetComponent<Player>().Money += player.GetComponent<Fishing>().FishList[fIndex].Value * 2;
+            player.GetComponent<Fishing>().FishList.RemoveAt(fIndex);
+            questManager.questList.RemoveAt(qIndex);
+            QuestButton();
             StartCoroutine(WaitForButtonClick(0.25f));
         }
     }
-    public void ReturnTimerQuest(Quest quest)
+    public void ReturnTimerQuest(int index)
     {
         if (canClick)
         {
-            player.GetComponent<Player>().Money += quest.Reward;
-            questManager.questList.Remove(quest);
-            QuestButton(); //Something may fail here if I don't immediately infuse the available quest list with another quest.
+            player.GetComponent<Player>().Money += questManager.questList[index].Reward;
+            questManager.questList.RemoveAt(index);
+            QuestButton();
             StartCoroutine(WaitForButtonClick(0.25f));
         }
     }

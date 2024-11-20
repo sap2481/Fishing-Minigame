@@ -99,8 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   opMenuPrefab: {fileID: 8078243606478333977, guid: c96c839a2d5949a488b60acf39912fe3, type: 3}
+  outpostActive: 0
   collisions: {fileID: 0}
-  tempFishSprite: {fileID: 0}
 --- !u!61 &3999210216890483344
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -135,7 +135,7 @@ BoxCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
-    border: {x: 0.42999998, y: 0.29, z: 0.089999996, w: 0.13}
+    border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1.28, y: 1.28}
     newSize: {x: 1.28, y: 1.28}
