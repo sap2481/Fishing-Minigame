@@ -24,6 +24,10 @@ public class Outpost : MonoBehaviour
     [SerializeField] Collisions collisions;
     Menu menu;
 
+    QuestManager questManager;
+    List<Quest> availableQuests;
+    bool canGenerateTimerQuest;
+
     float speedUpgradeCost;
     float originalSpeed;
     float rangeUpgradeCost;
@@ -53,6 +57,11 @@ public class Outpost : MonoBehaviour
 
         //Find Tutorial, if applicable
         tutorial = GameObject.FindObjectOfType<Tutorial>();
+
+        //EEVERYTHING RELATED TO QUEST GENERATION IS HERE
+        questManager = GameObject.FindObjectOfType<QuestManager>();
+        availableQuests = new List<Quest>();
+        canGenerateTimerQuest = true;
     }
 
     //==== UPDATE ====
@@ -74,7 +83,7 @@ public class Outpost : MonoBehaviour
             //Set range to zero so player can't cast on the outpost
             if (player.GetComponent<Fishing>() != null) { player.GetComponent<Fishing>().Range = 0; }
 
-            if (tutorial == null && (mouseLeftLastFrame && !mouseLeftThisFrame && !outpostActive && !menu.menuInstance)) //If the player clicked on the outpost, open the outpost menu
+            if (tutorial == null && (mouseLeftLastFrame && !mouseLeftThisFrame && !outpostActive && !menu.menuInstance && !questManager.questlogActive)) //If the player clicked on the outpost, open the outpost menu
             {
                 outpostActive = true;
                 player.GetComponent<Player>().Hull = 100; //Because the player docked at an outpost, reset health to full
@@ -101,6 +110,7 @@ public class Outpost : MonoBehaviour
     //==== METHODS & COROUTINES ====
     public void xOut() //Exit the outpost menu when the X button is clicked
     {
+        availableQuests.Clear();
         outpostActive = false;
         Destroy(opMenuInstance.gameObject);
         opMenuInstance = null;
@@ -202,6 +212,103 @@ public class Outpost : MonoBehaviour
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).gameObject.SetActive(false); //Set Sell panel to inactive
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).gameObject.SetActive(false); //Set Buy panel to inactive
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).gameObject.SetActive(true); //Set Quest panel to active <--
+
+        //Generate available quests
+        foreach (Quest quest in questManager.questList) //Check to see if a timer quest can be created (only one can be active at a time)
+        {
+            if (quest.Type == 2)
+            {
+                canGenerateTimerQuest = false;
+            }
+        }
+        for (int i = 0; i < 3 - questManager.questList.Count; i++) //Generate available quests below
+        {
+            if (canGenerateTimerQuest) //If a timer quest *can* be generated, it's an option in the random table
+            {
+                availableQuests.Add(new Quest(Random.Range(1, 3)));
+                if (availableQuests[i].Type == 2)
+                {
+                    canGenerateTimerQuest = false;
+                }
+            }
+            else //If a timer quest cannot be generated, just generate fish-finding quests
+            {
+                availableQuests.Add(new Quest(1));
+            }
+        }
+
+        //Fill in Quest Slots for Available Quests
+        for (int i = 0; i < 3 - questManager.questList.Count; i++)
+        {
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetComponent<Image>().color = Color.green;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(0).GetComponent<TMP_Text>().text = availableQuests[i].Dialogue;
+
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<Image>().color = Color.green;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
+            int index = i;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<Button>().onClick.AddListener(delegate { AcquireQuest(availableQuests, index); });
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = "Acquire";
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().color = Color.green;
+        }
+
+        //Fill in Quest Slots for Acquired Quests
+        for (int i = 0; i < questManager.questList.Count; i++)
+        {
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetComponent<Image>().color = Color.yellow;
+            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(0).GetComponent<TMP_Text>().text = questManager.questList[i].Description;
+
+            if (questManager.questList[i].Type == 1) //If the quest is a fish-fetching quest...
+            {
+                if (player.GetComponent<Fishing>().FishList.Count != 0) //If players have fish in their cargo hold...
+                {
+                    foreach (Fish fish in player.GetComponent<Fishing>().FishList) //Loop through the player's cargo hold
+                    {
+                        if (fish.Name == questManager.questList[i].GoalFish.Name) //If one of the fishes is the quest's goal fish, set up button accordingly
+                        {
+                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Image>().color = Color.green;
+                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
+                            int index = i;
+                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.AddListener(delegate { ReturnFishFetchQuest(index, fish); });
+                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = $"Complete (+ ${fish.Value * 2})";
+                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().color = Color.green;
+                            break;
+                        }
+                        else //If there is no fish matching the goal fish, set up the button accordingly
+                        {
+                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Image>().color = Color.red;
+                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
+                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = "Complete";
+                            opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().color = Color.red;
+                        }
+                    }
+                }
+                else //If they don't have any fish in their cargo hold, do the same thing as if there are no fish that match the goal fish
+                {
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Image>().color = Color.red;
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = "Complete";
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().color = Color.red;
+                }
+            }
+            else if (questManager.questList[i].Type == 2) //If the quest is a timer quest...
+            {
+                if (player.GetComponent<Fishing>().FishList.Count != 6) //If the player's cargo hold is not full...
+                {
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Image>().color = Color.red;
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = "Complete";
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().color = Color.red;
+                }
+                else //If the player's cargo hold IS full...
+                {
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Image>().color = Color.green;
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.RemoveAllListeners();
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetComponent<Button>().onClick.AddListener(delegate { ReturnTimerQuest(questManager.questList[i]); });
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = $"Complete (+ ${questManager.questList[i].Reward})";
+                    opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(2 - i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().color = Color.green;
+                }
+            }
+        }
     }
 
     public void SellTheFish(List<Fish> fishList, int index)
@@ -246,6 +353,37 @@ public class Outpost : MonoBehaviour
             player.GetComponent<Player>().MaxHull += 50;
             player.GetComponent<Player>().Money -= cost;
             BuyButton();
+            StartCoroutine(WaitForButtonClick(0.25f));
+        }
+    }
+    public void AcquireQuest(List<Quest> questlist, int index)
+    {
+        if (canClick)
+        {
+            questManager.questList.Add(questlist[index]);
+            availableQuests.RemoveAt(index);
+            QuestButton();
+            StartCoroutine(WaitForButtonClick(0.25f));
+        }
+    }
+    public void ReturnFishFetchQuest(int index, Fish fish)
+    {
+        if (canClick)
+        {
+            player.GetComponent<Player>().Money += fish.Value * 2;
+            player.GetComponent<Fishing>().FishList.Remove(fish); //Removes the wrong fish?????
+            questManager.questList.RemoveAt(index); //Something broke here.
+            QuestButton(); //Something may fail here if I don't immediately infuse the available quest list with another quest.
+            StartCoroutine(WaitForButtonClick(0.25f));
+        }
+    }
+    public void ReturnTimerQuest(Quest quest)
+    {
+        if (canClick)
+        {
+            player.GetComponent<Player>().Money += quest.Reward;
+            questManager.questList.Remove(quest);
+            QuestButton(); //Something may fail here if I don't immediately infuse the available quest list with another quest.
             StartCoroutine(WaitForButtonClick(0.25f));
         }
     }

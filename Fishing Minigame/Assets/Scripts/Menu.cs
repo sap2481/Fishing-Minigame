@@ -20,6 +20,7 @@ public class Menu : MonoBehaviour
 
     GameObject player;
     Outpost outpost;
+    QuestManager questManager;
 
     [SerializeField] Sprite tempFishSprite; //This is temporary functionality until each fish has their own sprite
     [SerializeField] Collisions collisions;
@@ -35,6 +36,7 @@ public class Menu : MonoBehaviour
 
         player = GameObject.FindGameObjectWithTag("Player");
         outpost = GameObject.FindObjectOfType<Outpost>();
+        questManager = GameObject.FindObjectOfType<QuestManager>();
     }
 
     //==== UPDATE ====
@@ -47,7 +49,7 @@ public class Menu : MonoBehaviour
 
         if (!escKeyPressedThisFrame && escKeyPressedLastFrame) //If the Escape key was just pressed...
         {
-            if (!menuActive && !outpost.outpostActive) //If the menu is not active, activate it
+            if (!menuActive && !outpost.outpostActive && !questManager.questlogActive) //If the menu is not active, activate it
             {
                 menuActive = true;
                 menuInstance = Instantiate(menuPrefab);

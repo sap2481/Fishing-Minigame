@@ -29,7 +29,7 @@ public class Fish : MonoBehaviour
     public Fish(int ringLevel)
     {
         this.ringLevel = ringLevel;
-        int fishDecider = Random.Range(1, 3);
+        int fishDecider = Random.Range(1, 4);
 
         switch (ringLevel)
         {
