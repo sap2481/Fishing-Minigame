@@ -186,10 +186,10 @@ RectTransform:
   - {fileID: 1759704510}
   m_Father: {fileID: 2075984482}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 769, y: 490}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -191, y: -50}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &163859187
 MonoBehaviour:
@@ -390,10 +390,10 @@ RectTransform:
   - {fileID: 748041550}
   m_Father: {fileID: 2075984482}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -772.5, y: 490}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 187.5, y: -50}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &306833553
 MonoBehaviour:
@@ -647,8 +647,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00d98ff20563ffa468931a1e1a2fb66d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questList: []
   questlogPrefab: {fileID: 8845456324351477861, guid: 54c4962db5e3cbd47947d3875597126e, type: 3}
   questlogInstance: {fileID: 0}
+  questlogActive: 0
   timerPanel: {fileID: 163859185}
 --- !u!1 &477703706
 GameObject:
@@ -774,10 +776,10 @@ RectTransform:
   - {fileID: 1988380964}
   m_Father: {fileID: 2075984482}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -883.39, y: 205}
-  m_SizeDelta: {x: -1819.6, y: -981.4431}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 76.609985, y: -335}
+  m_SizeDelta: {x: 100.400024, y: 98.556885}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &555884151
 MonoBehaviour:
@@ -1186,10 +1188,10 @@ RectTransform:
   - {fileID: 1011043066}
   m_Father: {fileID: 2075984482}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -883.39, y: 321.0453}
-  m_SizeDelta: {x: -1819.6, y: -981.4431}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 76.609985, y: -218.95471}
+  m_SizeDelta: {x: 100.400024, y: 98.556885}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1027028850
 MonoBehaviour:

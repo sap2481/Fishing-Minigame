@@ -48,7 +48,7 @@ public class Tutorial : MonoBehaviour
             if (increment == 12) { increment = 6; }
             else if (increment == 2 || increment == 4 || increment == 10 || increment == 11) { StartCoroutine(WaitToCheck(0.1f)); } //Delays a check by 0.1 seconds to allow the fishing mechanic to catch up to the tutorial
             else { increment++; }
-            StartCoroutine(WaitToClick(0.5f));
+            StartCoroutine(WaitToClick(0.25f));
         }
         
         switch (increment)
