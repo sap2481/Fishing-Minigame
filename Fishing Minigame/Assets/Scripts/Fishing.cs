@@ -117,7 +117,7 @@ public class Fishing : MonoBehaviour
         //Instantiate Whirlpools
         if (SceneManager.GetActiveScene().name != "TutorialScene")
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 40; i++)
             {
                 whirlpools.Add(Instantiate(whirlpoolPrefab, new Vector3(Random.Range(-50f, 50f), Random.Range(-50f, 50f)), Quaternion.identity, whirlpoolHolder.transform));
             }

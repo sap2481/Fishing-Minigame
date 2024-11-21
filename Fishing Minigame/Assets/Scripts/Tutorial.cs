@@ -54,7 +54,7 @@ public class Tutorial : MonoBehaviour
         switch (increment)
         {
             case 0:
-                textBox.text = "You must be the new fisherman! I'm Fork. Fork the Fisherman. Yeah, I know.";
+                textBox.text = "You must be the new angler! I'm Fork. Fork the Fisherman. Don't ask.";
                 break;
 
             case 1:
@@ -80,7 +80,7 @@ public class Tutorial : MonoBehaviour
 
             case 6:
                 if (player.GetComponent<Fishing>().crosshair.activeSelf == true) { increment = 10; } //Jump to increment 10 if the player screws up getting a fish on the line
-                textBox.text = "Good! Now, You see that blue area there? Try to click when the moving white bar is overlapping with that blue one. A lot of clicking, I know.";
+                textBox.text = "Good! Now, You see that green area there? Try to click when the moving bar is overlapping it, or as close as you can get. A lot of clicking, I know.";
                 break;
 
             case 7:
@@ -89,7 +89,7 @@ public class Tutorial : MonoBehaviour
 
             case 8:
                 if (player.GetComponent<Fishing>().FishFail) { increment = 11; } //if the player fails to catch a fish, jump to increment 11.
-                textBox.text = "Good job! You caught a fish! That's pretty much the entire game. Good luck, have fun, come see me if you need anything. It's not like I'm physically capable of going anywhere.";
+                textBox.text = "Good job! You caught a fish! That's pretty much the entire game. Use WASD or Arrow keys to move, don't bump into things, and click on the outpost (my lovely abode) to buy, sell, or quest. Good luck, have fun, and let the developer know if you have any issues, 'cause I sure can't do anything about them.";
                 break;
 
             case 9:

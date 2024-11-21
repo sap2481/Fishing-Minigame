@@ -26,7 +26,7 @@ public class QuestManager : MonoBehaviour
 
     //Other Relevant Instances
     GameObject player;
-    float maxSpeedStorage;
+    //float maxSpeedStorage;
     Outpost outpost;
     Menu menu;
     
@@ -62,7 +62,7 @@ public class QuestManager : MonoBehaviour
                 questlogInstance = Instantiate(questlogPrefab);
                 questlogInstance.transform.GetChild(0).GetChild(0).GetChild(3).GetComponent<Button>().onClick.AddListener(xOut);
 
-                maxSpeedStorage = player.GetComponent<Player>().MaxSpeed;
+                //maxSpeedStorage = player.GetComponent<Player>().MaxSpeed;
                 player.GetComponent<Player>().MaxSpeed = 0;
             }
             else if (questlogActive) //If Q was pressed while the questlog is active, exit the questlog
@@ -73,7 +73,7 @@ public class QuestManager : MonoBehaviour
 
         //If questlog is open, don't let the player fish
         if (questlogActive) { player.GetComponent<Fishing>().Range = 0; }
-        else { player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage; }
+        else if (!menu.menuInstance && !outpost.outpostActive && !questlogActive) { player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage; }
 
         if (questlogInstance != null) //If there's a questlog instance, fill it in
         {
@@ -142,7 +142,7 @@ public class QuestManager : MonoBehaviour
         questlogActive = false;
         Destroy(questlogInstance.gameObject);
         questlogInstance = null;
-        player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
+        player.GetComponent<Player>().MaxSpeed = player.GetComponent<Player>().MaxSpeedStorage;
     }
     public bool CheckForTimerQuest()
     {

@@ -14,7 +14,7 @@ public class Outpost : MonoBehaviour
     public bool outpostActive;
 
     GameObject player;
-    float maxSpeedStorage;
+    //float maxSpeedStorage;
 
     //Mouse Fields
     Vector2 mousePosition;
@@ -78,17 +78,18 @@ public class Outpost : MonoBehaviour
             player.GetComponent<Player>().StartBounceback(this.gameObject);
         }
 
-        if (collisions.CheckMouseOverlap(mousePosition, this.gameObject) || outpostActive) //If the mouse is overlapping with the outpost...
+        if (collisions.CheckMouseOverlap(mousePosition, this.gameObject) || outpostActive) //If the mouse is overlapping with the outpost, or the outpost is active
         {
             //Set range to zero so player can't cast on the outpost
-            if (player.GetComponent<Fishing>() != null) { player.GetComponent<Fishing>().Range = 0; }
+            player.GetComponent<Fishing>().Range = 0;
+            this.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
 
             if (tutorial == null && (mouseLeftLastFrame && !mouseLeftThisFrame && !outpostActive && !menu.menuInstance && !questManager.questlogActive)) //If the player clicked on the outpost, open the outpost menu
             {
                 outpostActive = true;
                 player.GetComponent<Player>().Hull = player.GetComponent<Player>().MaxHull; //Because the player docked at an outpost, reset health to full
 
-                maxSpeedStorage = player.GetComponent<Player>().MaxSpeed;
+                //maxSpeedStorage = player.GetComponent<Player>().MaxSpeed;
                 player.GetComponent<Player>().MaxSpeed = 0;
 
                 opMenuInstance = Instantiate(opMenuPrefab);
@@ -98,11 +99,19 @@ public class Outpost : MonoBehaviour
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(3).GetComponent<Button>().onClick.AddListener(QuestButton);
                 SellButton();
             }
+            else if (!outpostActive && !menu.menuInstance && !questManager.questlogActive)
+            {
+                player.GetComponent<Player>().MaxSpeed = player.GetComponent<Player>().MaxSpeedStorage;
+            }
         }
         else
         {
-            //Reset fishing range & player speed
-            if (player.GetComponent<Fishing>() != null) { player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage; }
+            //Reset fishing range
+            if (player.GetComponent<Fishing>() != null && !outpostActive && !menu.menuInstance && !questManager.questlogActive) 
+            { 
+                player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage;
+            }
+            this.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
         }
 
         //Update Money the Player Has
@@ -118,7 +127,7 @@ public class Outpost : MonoBehaviour
         outpostActive = false;
         Destroy(opMenuInstance.gameObject);
         opMenuInstance = null;
-        player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
+        player.GetComponent<Player>().MaxSpeed = player.GetComponent<Player>().MaxSpeedStorage;
     }
 
     public void BuyButton() //Change the menu to the Buy screen
@@ -128,7 +137,7 @@ public class Outpost : MonoBehaviour
         opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).gameObject.SetActive(false); //Set Quest panel to inactive
 
         //Calculate Upgrade Costs
-        speedUpgradeCost = 200 + ((maxSpeedStorage - originalSpeed) * 200);
+        speedUpgradeCost = 200 + ((player.GetComponent<Player>().MaxSpeedStorage - originalSpeed) * 200);
         rangeUpgradeCost = 300 + ((player.GetComponent<Fishing>().RangeStorage - originalRange) * 250);
         hullUpgradeCost = 400 + ((player.GetComponent<Player>().Hull - originalHull) * 6);
 
@@ -176,6 +185,9 @@ public class Outpost : MonoBehaviour
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetChild(0).GetComponent<TMP_Text>().color = Color.red;
             opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(5).GetChild(0).GetChild(3).GetChild(2).GetComponent<Button>().onClick.RemoveAllListeners();
         }
+
+        //Update Fork's dialogue
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(8).GetComponent<TMP_Text>().text = "No, you can't buy equipment yet. Can't you read? I can make your ship slightly better, but that's about it.";
     }
     public void SellButton() //Change the menu to the Sell screen
     {
@@ -212,6 +224,9 @@ public class Outpost : MonoBehaviour
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetChild(6).gameObject.SetActive(false); //Set Empty Cargo Hold message to inactive
             }
         }
+
+        //Update Fork's dialogue
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(8).GetComponent<TMP_Text>().text = "Yeah, I'm a MILF:\n<i>M</i>an,\n<i>I</i>\n<i>L</i>ove\n<i>F</i>ish!\nSell me whatever fish you've caught, I'll take it all.";
     }
     public void QuestButton()
     {
@@ -229,6 +244,18 @@ public class Outpost : MonoBehaviour
                 canGenerateTimerQuest = false;
             }
         }
+
+        if (availableQuests.Count > 0)
+        {
+            foreach (Quest quest in availableQuests)
+            {
+                if (quest.Type == 2)
+                {
+                    canGenerateTimerQuest = false;
+                }
+            }
+        }
+
         for (int i = 0; i < 3 - questManager.questList.Count; i++) //Generate available quests below
         {
             if (canGenerateTimerQuest) //If a timer quest *can* be generated, it's an option in the random table
@@ -263,6 +290,7 @@ public class Outpost : MonoBehaviour
             }
             else //If it's a timer quest & the player's cargo hold is NOT empty...
             {
+                opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetComponent<Button>().onClick.AddListener(TimerQuestDialogueChange);
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetChild(1).GetChild(0).GetComponent<TMP_Text>().text = "Acquire";
 
                 opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(6).GetChild(i).GetComponent<Image>().color = Color.red;
@@ -330,6 +358,9 @@ public class Outpost : MonoBehaviour
                 }
             }
         }
+
+        //Update Fork's dialogue
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(8).GetComponent<TMP_Text>().text = "Here's where I tell you to go do the thing you're already doing, but in a more specific way.";
     }
 
     public void SellTheFish(List<Fish> fishList, int index)
@@ -350,7 +381,7 @@ public class Outpost : MonoBehaviour
     {
         if (canClick)
         {
-            player.GetComponent<Player>().MaxSpeed++;
+            player.GetComponent<Player>().MaxSpeedStorage++;
             player.GetComponent<Player>().Money -= cost;
             BuyButton();
             StartCoroutine(WaitForButtonClick(0.25f));
@@ -407,6 +438,10 @@ public class Outpost : MonoBehaviour
             QuestButton();
             StartCoroutine(WaitForButtonClick(0.25f));
         }
+    }
+    public void TimerQuestDialogueChange()
+    {
+        opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(8).GetComponent<TMP_Text>().text = "Oopsie doodle! Can't start a timer quest with fish in your cargo hold. That defeats the whole challenge! Sell your fish, then try again.";
     }
     private IEnumerator WaitForButtonClick(float waitTime)
     {

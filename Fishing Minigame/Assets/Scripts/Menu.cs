@@ -16,7 +16,7 @@ public class Menu : MonoBehaviour
     bool escKeyPressedThisFrame;
     bool menuActive;
 
-    float maxSpeedStorage;
+    //float maxSpeedStorage;
 
     GameObject player;
     Outpost outpost;
@@ -43,9 +43,12 @@ public class Menu : MonoBehaviour
     void Update()
     {
         escKeyPressedThisFrame = Keyboard.current.escapeKey.isPressed;
+
         //Get Mouse Position
         mousePosition = Mouse.current.position.ReadValue();
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+        //maxSpeedStorage = player.GetComponent<Player>().MaxSpeed;
 
         if (!escKeyPressedThisFrame && escKeyPressedLastFrame) //If the Escape key was just pressed...
         {
@@ -54,8 +57,8 @@ public class Menu : MonoBehaviour
                 menuActive = true;
                 menuInstance = Instantiate(menuPrefab);
                 menuInstance.transform.GetChild(0).GetChild(0).GetChild(3).GetComponent<Button>().onClick.AddListener(ResetClicked);
+                menuInstance.transform.GetChild(0).GetChild(0).GetChild(4).GetComponent<Button>().onClick.AddListener(xOut);
 
-                maxSpeedStorage = player.GetComponent<Player>().MaxSpeed;
                 player.GetComponent<Player>().MaxSpeed = 0;
             }
             else if (menuActive) //If the menu is active, deactivate it
@@ -64,17 +67,17 @@ public class Menu : MonoBehaviour
                 Destroy(menuInstance.gameObject);
                 menuInstance = null;
 
-                player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
+                player.GetComponent<Player>().MaxSpeed = player.GetComponent<Player>().MaxSpeedStorage;
             }
         }
 
-        if (menuActive) { player.GetComponent<Fishing>().Range = 0; Debug.Log("Range should be 0 now"); }
-        else { player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage; }
+        if (menuActive) { player.GetComponent<Fishing>().Range = 0; }
+        else if (!menuActive && !outpost.outpostActive && !questManager.questlogActive) { player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage; }
 
         if (menuInstance != null)
         {
             //Fill Out Ship Information
-            menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = "Boat Speed: " + maxSpeedStorage + " Knots";
+            menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = "Boat Speed: " + player.GetComponent<Player>().MaxSpeedStorage + " Knots";
             menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = "Line Range: " + player.GetComponent<Fishing>().RangeStorage + " Clicks";
             menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(2).GetComponent<TMP_Text>().text = "Hull: " + player.GetComponent<Player>().Hull + " / " + player.GetComponent<Player>().MaxHull;
             menuInstance.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(3).GetComponent<TMP_Text>().text = "Money: $" + player.GetComponent<Player>().Money;
@@ -113,11 +116,19 @@ public class Menu : MonoBehaviour
         Destroy(menuInstance.gameObject);
         menuInstance = null;
 
-        player.GetComponent<Player>().MaxSpeed = maxSpeedStorage;
+        player.GetComponent<Player>().MaxSpeed = player.GetComponent<Player>().MaxSpeedStorage;
         player.GetComponent<Fishing>().Range = player.GetComponent<Fishing>().RangeStorage;
 
         SceneManager.LoadScene("TutorialScene");
 
         Debug.Log("Game Reset.");
+    }
+
+    void xOut()
+    {
+        player.GetComponent<Player>().MaxSpeed = player.GetComponent<Player>().MaxSpeedStorage;
+        menuActive = false;
+        Destroy(menuInstance.gameObject);
+        menuInstance = null;
     }
 }

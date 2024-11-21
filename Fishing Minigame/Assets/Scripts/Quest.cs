@@ -33,18 +33,18 @@ public class Quest : MonoBehaviour
         {
             case 1: //Type 1 Quest - Fetch Fish Quest
                 goalFish = new Fish(Random.Range(1, 4)); //Randomly selects one of the 9 fish to be the goal fish
-                description = $"Catch one <b>{goalFish.Name}</b> & sell it to Fork for double its value.";
+                description = $"Catch one <i>{goalFish.Name}</i> & sell it to Fork for double its value.";
                 int randomDesc = Random.Range(1, 4);
                 switch (randomDesc)
                 {
                     case 1:
-                        dialogue = $"I'm looking for a <b>{goalFish.Name}</b> and willing to pay double. Wanna go find one for me? Can't exactly do it myself.";
+                        dialogue = $"I'm looking for a <i>{goalFish.Name}</i> and willing to pay double. Wanna go find one for me? Can't exactly do it myself.";
                         break;
                     case 2:
-                        dialogue = $"I've got a hankering for a <b>{goalFish.Name}</b>. Don't ask me why, that's private. Just go get one for me, and I'll pay double what I usually do.";
+                        dialogue = $"I've got a hankering for a <i>{goalFish.Name}</i>. Don't ask me why, that's private. Just go get one for me, and I'll pay double what I usually do.";
                         break;
                     case 3:
-                        dialogue = $"I wish I could go find a <b>{goalFish.Name}</b>, but I can't, 'cause I'm a video game NPC and I'm stuck here. If you can nab one for me, I'll pay double.";
+                        dialogue = $"I wish I could go find a <i>{goalFish.Name}</i>, but I can't, 'cause I'm a video game NPC and I'm stuck here. If you can nab one for me, I'll pay double.";
                         break;
                     default:
                         break;
@@ -54,18 +54,18 @@ public class Quest : MonoBehaviour
             case 2: //Type 2 Quest - Timer Quest
                 seconds = Random.Range(120, 241);
                 reward = seconds + Random.Range(100, 251);
-                description = $"Fill your cargo hold with fish and return to Fork before time runs out for <b>${reward}</b>";
+                description = $"Fill your cargo hold with fish and return to Fork before time runs out for <i>${reward}</i>";
                 int randomDescription = Random.Range(1, 4);
                 switch (randomDescription)
                 {
                     case 1:
-                        dialogue = $"I've got a challenge for you - get your cargo hold from empty to full in {seconds} seconds. Oh, that seems specific, does it? That's 'cause the number was randomly generated, dingus. This whole game is. Get with the program. Don't you want an extra ${reward}?";
+                        dialogue = $"I've got a challenge for you - get your cargo hold from empty to full in {seconds} seconds. Oh, that seems specific, does it? That's 'cause the number was randomly generated. This whole game is. Get with the program. Don't you want an extra ${reward}?";
                         break;
                     case 2:
                         dialogue = $"Wanna keep playing the game? Bored of just plain ol' fishing? Try filling your cargo hold in {seconds} seconds. If you do, I'll pay you ${reward}, just for doin' it! Doesn't that seem like a fun way to stave off the boredom?";
                         break;
                     case 3:
-                        dialogue = $"Timer quest! If you can fill your cargo hold with fish, any fish, in {seconds} seconds, I'll pay you ${reward}. Why, you ask? It's cute that you think I have any answers for you. These prompts are pre-written - I'm just as confused as you are. Seems like a fun challenge though!";
+                        dialogue = $"Timer quest! If you can fill your cargo hold with fish, any fish, in {seconds} seconds, I'll pay you ${reward}. Why, you ask? No clue at all. These prompts are pre-written - I'm just as confused as you are. Seems like a fun challenge though!";
                         break;
                     default:
                         break;

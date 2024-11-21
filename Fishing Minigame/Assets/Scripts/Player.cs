@@ -18,8 +18,9 @@ public class Player : MonoBehaviour
     [SerializeField] float upSpeed = 0f;
     [SerializeField] float downSpeed = 0f;
 
-    private float maxSpeed = 5f;
-    private float accel = 0.05f;
+    private float maxSpeed;
+    private float maxSpeedStorage;
+    private float accel;
 
     bool bounceback = false;
     GameObject collidingObj;
@@ -42,6 +43,7 @@ public class Player : MonoBehaviour
     public Vector3 Direction { get { return direction; } }
     public Vector3 Velocity { get { return velocity; } }
     public float MaxSpeed { get { return maxSpeed; } set { maxSpeed = value; } }
+    public float MaxSpeedStorage { get { return maxSpeedStorage; } set { maxSpeedStorage = value; } }
     public float Acceleration { get { return accel; } set { accel = value; } }
     public bool Bounceback { get { return bounceback; } set { bounceback = value; } }
     public float Hull { get { return hull; } set { hull = value; } }
@@ -58,6 +60,10 @@ public class Player : MonoBehaviour
         cam = Camera.main;
         camHeight = cam.orthographicSize * 2.0f;
         camWidth = cam.orthographicSize * cam.aspect;
+
+        if (SceneManager.GetActiveScene().name == "TutorialScene") { maxSpeed = 0; } else { maxSpeed = 5; }
+        maxSpeedStorage = maxSpeed;
+        accel = 0.05f;
     }
 
     //==== UPDATE ====

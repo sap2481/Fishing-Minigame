@@ -18,6 +18,7 @@ public class HealthBar : MonoBehaviour
     //==== UPDATE ====
     void Update()
     {
+        slider.maxValue = player.GetComponent<Player>().MaxHull;
         slider.value = player.GetComponent<Player>().Hull;
         if (slider.value < 0) { slider.value = 0; }
     }

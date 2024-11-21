@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Environment : MonoBehaviour
 {
@@ -60,23 +61,26 @@ public class Environment : MonoBehaviour
         }
 
         //Create Rocks
-        for (int i = 0; i < 20; i++)
+        if (SceneManager.GetActiveScene().name != "TutorialScene")
         {
-            rocks.Add(Instantiate(rockPrefab, new Vector3(Random.Range(-50f, 50f), Random.Range(-50f, 50f)), Quaternion.identity, rockHolder.transform));
-
-            for (int j = 0; j < player.GetComponent<Fishing>().whirlpools.Count; j++)
+            for (int i = 0; i < 20; i++)
             {
-                //Make sure rocks don't spawn over the player, the outpost, or any whirlpools
-                bool isNotColliding = false;
-                while (!isNotColliding)
+                rocks.Add(Instantiate(rockPrefab, new Vector3(Random.Range(-50f, 50f), Random.Range(-50f, 50f)), Quaternion.identity, rockHolder.transform));
+
+                for (int j = 0; j < player.GetComponent<Fishing>().whirlpools.Count; j++)
                 {
-                    if (collisions.CheckSpriteCollision(rocks[i], player) || collisions.CheckSpriteCollision(rocks[i], outpost.gameObject) || collisions.CheckSpriteCollision(rocks[i], player.GetComponent<Fishing>().whirlpools[j]))
+                    //Make sure rocks don't spawn over the player, the outpost, or any whirlpools
+                    bool isNotColliding = false;
+                    while (!isNotColliding)
                     {
-                        rocks[i].transform.position = new Vector3(Random.Range(-50f, 50f), Random.Range(-50f, 50f));
-                    }
-                    else
-                    {
-                        isNotColliding = true;
+                        if (collisions.CheckSpriteCollision(rocks[i], player) || collisions.CheckSpriteCollision(rocks[i], outpost.gameObject) || collisions.CheckSpriteCollision(rocks[i], player.GetComponent<Fishing>().whirlpools[j]))
+                        {
+                            rocks[i].transform.position = new Vector3(Random.Range(-50f, 50f), Random.Range(-50f, 50f));
+                        }
+                        else
+                        {
+                            isNotColliding = true;
+                        }
                     }
                 }
             }
