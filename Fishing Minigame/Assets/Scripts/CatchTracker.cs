@@ -19,13 +19,13 @@ public class CatchTracker : MonoBehaviour
     {
         fishingManager = GameObject.FindGameObjectWithTag("Player").GetComponent<Fishing>();
 
-        catchTracker_Text.text = "Fish Caught: 0";
+        catchTracker_Text.text = "Total Fish Caught: 0\nFish in Cargo Hold: 0";
     }
 
     //==== UPDATE ====
     void Update()
     {
-        catchTracker_Text.text = "Fish Caught: " + fishingManager.FishCaught;
+        catchTracker_Text.text = "Total Fish Caught: " + fishingManager.FishCaught + "\nFish In Cargo Hold: " + fishingManager.FishList.Count;
 
         if (prevFishCaught != fishingManager.FishCaught) //If the player just caught a fish, turn the panel text green.
         {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class OutpostPointer : MonoBehaviour
@@ -60,13 +61,15 @@ public class OutpostPointer : MonoBehaviour
             pointerPosition = outpostPosition;
 
             //Adjust pointer position to hover at the edge of the viewport
-            if (pointerPosition.x < playerPosition.x - camWidth) { pointerPosition.x = playerPosition.x - camWidth + 0.5f; }
-            else if (pointerPosition.x > playerPosition.x + camWidth) { pointerPosition.x = playerPosition.x + camWidth - 0.5f; }
+            if (pointerPosition.x < playerPosition.x - camWidth) { pointerPosition.x = playerPosition.x - camWidth + 0.75f; }
+            else if (pointerPosition.x > playerPosition.x + camWidth) { pointerPosition.x = playerPosition.x + camWidth - 0.75f; }
 
-            if (pointerPosition.y < playerPosition.y - (camHeight / 2)) { pointerPosition.y = playerPosition.y - (camHeight / 2) + 0.5f; }
-            else if (pointerPosition.y > playerPosition.y + (camHeight / 2)) { pointerPosition.y = playerPosition.y + (camHeight / 2) - 0.5f; }
+            if (pointerPosition.y < playerPosition.y - (camHeight / 2)) { pointerPosition.y = playerPosition.y - (camHeight / 2) + 1f; }
+            else if (pointerPosition.y > playerPosition.y + (camHeight / 2)) { pointerPosition.y = playerPosition.y + (camHeight / 2) - 0.75f; }
 
             pointerObj.transform.position = pointerPosition; //Set pointer transform position
         }
+
+        if (pointerObj != null) { pointerObj.transform.GetChild(1).GetComponent<TMP_Text>().text = Mathf.Round(Vector3.Distance(player.transform.position, outpost.transform.position)) + " Knots"; }
     }
 }

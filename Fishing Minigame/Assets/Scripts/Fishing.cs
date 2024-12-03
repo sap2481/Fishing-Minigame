@@ -219,7 +219,8 @@ public class Fishing : MonoBehaviour
                         //Instantiate Bullseye Center
                         circles.Add(Instantiate(ringCenter));
                         circles[0].transform.position = bobber.transform.position;
-                        //circles[0].transform.localScale = new Vector3(0.5f, 0.5f);
+                        circles[0].GetComponent<SpriteRenderer>().sprite = fishInProgress.Sprite;
+                        circles[0].transform.localScale = new Vector3(0.2f, 0.2f);
                         //circles[0].GetComponent<SpriteRenderer>().color = Color.black;
                         circles[0].GetComponent<SpriteRenderer>().sortingOrder = ringTotal * 4 + 4;
 
@@ -287,13 +288,6 @@ public class Fishing : MonoBehaviour
                                 }
                             }
 
-                            //Destroy All Mechanic Items
-                            foreach (GameObject tCone in targetCones) { Destroy(tCone.gameObject); }
-                            targetCones.Clear();
-                            foreach (GameObject mCone in movingCones) { Destroy(mCone.gameObject); }
-                            movingCones.Clear();
-                            foreach (GameObject circle in circles) { Destroy(circle.gameObject); }
-                            circles.Clear();
                             soundMixer.StopReel();
 
                             //Determine a catch
@@ -302,12 +296,14 @@ public class Fishing : MonoBehaviour
                                 fishCaught++;
                                 if (fishList.Count < 6) { fishList.Add(fishInProgress); }
                                 soundMixer.PlaySuccess();
+                                StartCoroutine(FishCatchSuccess(0.5f));
                                 Debug.Log(fishInProgress.Name + " Caught with Rotation Difference " + rotationDifference);
                             }
                             else
                             {
                                 fishFail = true;
                                 soundMixer.PlayFailure();
+                                StartCoroutine(FishCatchFailure(0.5f));
                                 Debug.Log("Failed to Catch " + fishInProgress.Name + " with Rotation Difference " + rotationDifference);
                             }
 
@@ -584,5 +580,37 @@ public class Fishing : MonoBehaviour
                 notification = null;
             }
         }
+    }
+
+    //Both below are working, but edit to make it so that the fish in the center doesn't change color, and that the moving cone is destroyed when the catch is succeeded or failed
+    private IEnumerator FishCatchSuccess(float waitTime)
+    {
+        foreach (GameObject tCone in targetCones) { tCone.GetComponent<SpriteRenderer>().color = Color.green; }
+        foreach (GameObject mCone in movingCones) { mCone.GetComponent<SpriteRenderer>().color = Color.green; }
+        foreach (GameObject circle in circles) { circle.GetComponent<SpriteRenderer>().color = Color.green; }
+
+        yield return new WaitForSeconds(waitTime);
+
+        foreach (GameObject tCone in targetCones) { Destroy(tCone.gameObject); }
+        targetCones.Clear();
+        foreach (GameObject mCone in movingCones) { Destroy(mCone.gameObject); }
+        movingCones.Clear();
+        foreach (GameObject circle in circles) { Destroy(circle.gameObject); }
+        circles.Clear();
+    }
+    private IEnumerator FishCatchFailure(float waitTime)
+    {
+        foreach (GameObject tCone in targetCones) { tCone.GetComponent<SpriteRenderer>().color = Color.red; }
+        foreach (GameObject mCone in movingCones) { mCone.GetComponent<SpriteRenderer>().color = Color.red; }
+        foreach (GameObject circle in circles) { circle.GetComponent<SpriteRenderer>().color = Color.red; }
+
+        yield return new WaitForSeconds(waitTime);
+
+        foreach (GameObject tCone in targetCones) { Destroy(tCone.gameObject); }
+        targetCones.Clear();
+        foreach (GameObject mCone in movingCones) { Destroy(mCone.gameObject); }
+        movingCones.Clear();
+        foreach (GameObject circle in circles) { Destroy(circle.gameObject); }
+        circles.Clear();
     }
 }

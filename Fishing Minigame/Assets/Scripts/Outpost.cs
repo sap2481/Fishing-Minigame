@@ -115,7 +115,7 @@ public class Outpost : MonoBehaviour
         }
 
         //Update Money the Player Has
-        if (outpostActive) { opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(9).GetComponent<TMP_Text>().text = "Money: $" + player.GetComponent<Player>().Money; }
+        if (opMenuInstance != null) { opMenuInstance.transform.GetChild(0).GetChild(0).GetChild(9).GetComponent<TMP_Text>().text = "Money: $" + player.GetComponent<Player>().Money; }
 
         mouseLeftLastFrame = mouseLeftThisFrame;
     }
@@ -124,10 +124,10 @@ public class Outpost : MonoBehaviour
     public void xOut() //Exit the outpost menu when the X button is clicked
     {
         availableQuests.Clear();
-        outpostActive = false;
         Destroy(opMenuInstance.gameObject);
         opMenuInstance = null;
         player.GetComponent<Player>().MaxSpeed = player.GetComponent<Player>().MaxSpeedStorage;
+        StartCoroutine(WaitForActive(0.1f));
     }
 
     public void BuyButton() //Change the menu to the Buy screen
@@ -448,5 +448,10 @@ public class Outpost : MonoBehaviour
         canClick = false;
         yield return new WaitForSeconds(waitTime);
         canClick = true;
-    } 
+    }
+    private IEnumerator WaitForActive(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        outpostActive = false;
+    }
 }
