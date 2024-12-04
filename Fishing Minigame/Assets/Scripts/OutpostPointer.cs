@@ -70,6 +70,6 @@ public class OutpostPointer : MonoBehaviour
             pointerObj.transform.position = pointerPosition; //Set pointer transform position
         }
 
-        if (pointerObj != null) { pointerObj.transform.GetChild(1).GetComponent<TMP_Text>().text = Mathf.Round(Vector3.Distance(player.transform.position, outpost.transform.position)) + " Knots"; }
+        if (pointerObj != null) { pointerObj.transform.GetChild(1).GetComponent<TMP_Text>().text = Mathf.Round(Vector3.Distance(player.transform.position, outpost.transform.position)) + " Clicks"; }
     }
 }

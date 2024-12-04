@@ -93,16 +93,19 @@ public class Environment : MonoBehaviour
         //Change tile positions
         foreach (GameObject tile in tiles)
         {
+            float playerGridX = Mathf.Round(player.transform.position.x / sizeValueX) * sizeValueX;
+            float playerGridY = Mathf.Round(player.transform.position.y / sizeValueY) * sizeValueY;
+
             float xDistance = Mathf.Abs(player.transform.position.x - tile.transform.position.x);
-            if (xDistance >= (sizeValueX * 4 - 0.2f))
+            if (xDistance >= (sizeValueX * 4 /*- 0.2f*/))
             {
                 if (player.transform.position.x > lastPlayerPos.x) //If the player is moving right, shift tiles to the right
                 {
-                    tile.transform.position = new Vector3(player.transform.position.x + (sizeValueX * 3), tile.transform.position.y);
+                    tile.transform.position = new Vector3(playerGridX + (sizeValueX * 3), tile.transform.position.y);
                 }
                 else //If the player is moving left, shift tiles to the left
                 {
-                    tile.transform.position = new Vector3(player.transform.position.x - (sizeValueX * 3), tile.transform.position.y);
+                    tile.transform.position = new Vector3(playerGridX - (sizeValueX * 3), tile.transform.position.y);
                 }
             }
 
@@ -111,11 +114,11 @@ public class Environment : MonoBehaviour
             {
                 if (player.transform.position.y > lastPlayerPos.y) //If the player is moving up, shift tiles up
                 {
-                    tile.transform.position = new Vector3(tile.transform.position.x, player.transform.position.y + (sizeValueY * 3));
+                    tile.transform.position = new Vector3(tile.transform.position.x, playerGridY + (sizeValueY * 3));
                 }
                 else //If the player is moving down, shift tiles down
                 {
-                    tile.transform.position = new Vector3(tile.transform.position.x, player.transform.position.y - (sizeValueY * 3));
+                    tile.transform.position = new Vector3(tile.transform.position.x, playerGridY - (sizeValueY * 3));
                 }
             }
         }

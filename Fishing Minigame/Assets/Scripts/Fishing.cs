@@ -124,7 +124,7 @@ public class Fishing : MonoBehaviour
         }
         else
         {
-            whirlpools.Add(Instantiate(whirlpoolPrefab, new Vector3(0, 3), Quaternion.identity, whirlpoolHolder.transform));
+            whirlpools.Add(Instantiate(whirlpoolPrefab, new Vector3(1f, 1.5f), Quaternion.identity, whirlpoolHolder.transform));
         }
 
         //Initialize Other Values
@@ -134,7 +134,7 @@ public class Fishing : MonoBehaviour
         fishOnTheLine = false;
         ringTotal = 0;
         ringCount = 0;
-        range = 4;
+        if (tutorial != null) { range = 3f; } else { range = 4f; }
         rangeStorage = range; //this is a bad solution because range will eventually be upgradeable, come back to it
         distance = 0;
         fishFail = false;
@@ -586,8 +586,15 @@ public class Fishing : MonoBehaviour
     private IEnumerator FishCatchSuccess(float waitTime)
     {
         foreach (GameObject tCone in targetCones) { tCone.GetComponent<SpriteRenderer>().color = Color.green; }
-        foreach (GameObject mCone in movingCones) { mCone.GetComponent<SpriteRenderer>().color = Color.green; }
-        foreach (GameObject circle in circles) { circle.GetComponent<SpriteRenderer>().color = Color.green; }
+        foreach (GameObject mCone in movingCones) 
+        {
+            if (movingCones.IndexOf(mCone) == movingCones.Count - 1) { mCone.SetActive(false); }
+            else { mCone.GetComponent<SpriteRenderer>().color = Color.green; }
+        }
+        foreach (GameObject circle in circles)
+        {
+            if (circles.IndexOf(circle) != 0) { circle.GetComponent<SpriteRenderer>().color = Color.green; } //Don't make circle 0 green, cuz that's the fish sprite
+        }
 
         yield return new WaitForSeconds(waitTime);
 
@@ -601,8 +608,15 @@ public class Fishing : MonoBehaviour
     private IEnumerator FishCatchFailure(float waitTime)
     {
         foreach (GameObject tCone in targetCones) { tCone.GetComponent<SpriteRenderer>().color = Color.red; }
-        foreach (GameObject mCone in movingCones) { mCone.GetComponent<SpriteRenderer>().color = Color.red; }
-        foreach (GameObject circle in circles) { circle.GetComponent<SpriteRenderer>().color = Color.red; }
+        foreach (GameObject mCone in movingCones) 
+        {
+            if (movingCones.IndexOf(mCone) == movingCones.Count - 1) { mCone.SetActive(false); } //If it's the last moving cone, set it to inactive
+            else { mCone.GetComponent<SpriteRenderer>().color = Color.red; }
+        }
+        foreach (GameObject circle in circles) 
+        {
+            if (circles.IndexOf(circle) != 0) { circle.GetComponent<SpriteRenderer>().color = Color.red; } //Don't make circle 0 red, cuz that's the fish sprite
+        }
 
         yield return new WaitForSeconds(waitTime);
 

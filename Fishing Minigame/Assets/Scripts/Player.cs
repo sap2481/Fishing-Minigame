@@ -70,7 +70,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         //Move Camera
-        cam.transform.position = new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y, -10);
+        if (SceneManager.GetActiveScene().name != "TutorialScene") { cam.transform.position = new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y, -10); }
         
         //Update Speed
         if (!IsMoving()) //If Not Moving, Decelerate All Directions
