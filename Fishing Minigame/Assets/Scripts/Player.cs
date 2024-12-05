@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     float maxHull = 100f;
     bool sinking = false; //When the player reaches 0 hull, the boat sinks & the player resets
     bool resetTiles; //Tells the environment to reset the tiles properly
+    bool playedSinkingSound;
 
     //Camera
     Camera cam;
@@ -37,6 +38,7 @@ public class Player : MonoBehaviour
     float money;
 
     Scene tutorial;
+    [SerializeField] SoundMixer soundMixer;
 
     //==== PROPERTIES ====
     public Vector3 Position { get { return position; } set { position = value; } }
@@ -64,6 +66,8 @@ public class Player : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "TutorialScene") { maxSpeed = 0; } else { maxSpeed = 5; }
         maxSpeedStorage = maxSpeed;
         accel = 0.05f;
+
+        playedSinkingSound = false;
     }
 
     //==== UPDATE ====
@@ -216,6 +220,7 @@ public class Player : MonoBehaviour
         if (hull <= 0) { sinking = true; } //if the player reaches 0 Hull, start sinking the ship
         if (sinking) //If the ship is sinking...
         {
+            if (!playedSinkingSound) { soundMixer.PlaySinking(); playedSinkingSound = true; }
             this.transform.localScale -= new Vector3(0.5f * Time.deltaTime, 0.5f * Time.deltaTime);
             leftSpeed = 0f; rightSpeed = 0f; upSpeed = 0f; downSpeed = 0f;
             if (this.transform.localScale.x <= 0f) //When the ship has "sunk", reset it
@@ -227,6 +232,7 @@ public class Player : MonoBehaviour
                 money = 0;
                 sinking = false;
                 resetTiles = true;
+                playedSinkingSound = false;
             }
         }
     }
@@ -253,6 +259,7 @@ public class Player : MonoBehaviour
     
     public void StartBounceback(GameObject collidingObj)
     {
+        soundMixer.PlayImpact();
         this.collidingObj = collidingObj;
         if (!bounceback) { hull -= 10; }
         bounceback = true;

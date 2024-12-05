@@ -11,12 +11,18 @@ public class SoundMixer : MonoBehaviour
     [SerializeField] GameObject successPrefab;
     [SerializeField] GameObject failurePrefab;
     [SerializeField] GameObject reelPrefab;
+    [SerializeField] GameObject notificationPrefab;
+    [SerializeField] GameObject impactPrefab;
+    [SerializeField] GameObject sinkingPrefab;
 
     AudioSource bloop;
     AudioSource ping;
     AudioSource success;
     AudioSource failure;
     AudioSource reel;
+    AudioSource notification;
+    AudioSource impact;
+    AudioSource sinking;
 
     //==== Start ====
     void Start()
@@ -35,6 +41,15 @@ public class SoundMixer : MonoBehaviour
 
         reel = Instantiate(reelPrefab, this.transform).GetComponent<AudioSource>();
         reel.enabled = true;
+
+        notification = Instantiate(notificationPrefab, this.transform).GetComponent<AudioSource>();
+        notification.enabled = true;
+
+        impact = Instantiate(impactPrefab, this.transform).GetComponent<AudioSource>();
+        impact.enabled = true;
+
+        sinking = Instantiate(sinkingPrefab, this.transform).GetComponent<AudioSource>();
+        sinking.enabled = true;
     }
 
     //==== METHODS ====
@@ -67,6 +82,21 @@ public class SoundMixer : MonoBehaviour
     {
         reel.Stop();
         Debug.Log("Reel stopped");
+    }
+    public void PlayNotification()
+    {
+        notification.Play();
+        Debug.Log("Notification Played");
+    }
+    public void PlayImpact()
+    {
+        impact.Play();
+        Debug.Log("Impact Played");
+    }
+    public void PlaySinking()
+    {
+        sinking.Play();
+        Debug.Log("Sinking Played");
     }
 }
 

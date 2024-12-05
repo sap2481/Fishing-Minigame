@@ -21,6 +21,7 @@ public class Environment : MonoBehaviour
     float sizeValueX, sizeValueY;
 
     [SerializeField] Collisions collisions;
+    [SerializeField] SoundMixer soundMixer;
 
     Outpost outpost;
     

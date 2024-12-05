@@ -22,6 +22,7 @@ public class Outpost : MonoBehaviour
     bool mouseLeftLastFrame;
 
     [SerializeField] Collisions collisions;
+    [SerializeField] SoundMixer soundMixer;
     Menu menu;
 
     QuestManager questManager;

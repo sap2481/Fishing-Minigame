@@ -580,6 +580,7 @@ MonoBehaviour:
   rockPrefab: {fileID: 3981002443483623855, guid: 0cc4b2800e34c1c4aa9c13fd19b7f0c9, type: 3}
   rockHolder: {fileID: 334023664}
   collisions: {fileID: 428767371}
+  soundMixer: {fileID: 2036975811}
 --- !u!114 &428767370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1244,6 +1245,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 428767371}
     - target: {fileID: -495538985967978783, guid: 528a017658db4204d8b76f49ad2b543d, type: 3}
+      propertyPath: soundMixer
+      value: 
+      objectReference: {fileID: 2036975811}
+    - target: {fileID: -495538985967978783, guid: 528a017658db4204d8b76f49ad2b543d, type: 3}
       propertyPath: opMenuPrefab
       value: 
       objectReference: {fileID: 8078243606478333977, guid: 68f0ecf4daefe924fad6e542b483814c, type: 3}
@@ -1356,6 +1361,10 @@ PrefabInstance:
       propertyPath: whirlpoolHolder
       value: 
       objectReference: {fileID: 591024127}
+    - target: {fileID: 1587746309094844594, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
+      propertyPath: soundMixer
+      value: 
+      objectReference: {fileID: 2036975811}
     - target: {fileID: 4597014426364639718, guid: 681efd52f4ecfe34fb9d36c3f7eea74c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2383,6 +2392,9 @@ MonoBehaviour:
   successPrefab: {fileID: 9046236231308107794, guid: 73772bb2974285643ba151e459921b44, type: 3}
   failurePrefab: {fileID: 9046236231308107794, guid: 4bd2a8b3d4e3e79469eb4b1d5d0b12cc, type: 3}
   reelPrefab: {fileID: 9046236231308107794, guid: 9abd3c34bc89ef44ba4bd08c95f920cb, type: 3}
+  notificationPrefab: {fileID: 9046236231308107794, guid: a4ebebbb4e4c5944ea45688def401b87, type: 3}
+  impactPrefab: {fileID: 9046236231308107794, guid: 4212779bcbc89944fa02002fce34fe10, type: 3}
+  sinkingPrefab: {fileID: 9046236231308107794, guid: 4129ad9f2e6d3994b8e38f8b1387ccb3, type: 3}
 --- !u!4 &2036975812
 Transform:
   m_ObjectHideFlags: 0
